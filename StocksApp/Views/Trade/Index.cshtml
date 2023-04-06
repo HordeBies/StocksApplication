@@ -16,24 +16,26 @@
 </div>
 
 <script>
-    const token = "@configuration["FinnhubToken"]"; //This is not safe since it is exposed to the client. It should be stored in the server and retrieved via an API call.
-    const socket = new WebSocket(`wss://ws.finnhub.io?token=${token}`);
     const symbol = "@Model.StockSymbol";
     const stockPrice = document.getElementById('StockPrice');
 
-    socket.addEventListener('open', (event) => {
-        socket.send(JSON.stringify({ 'type': 'subscribe', 'symbol': symbol }));
-    });
-    
-    socket.addEventListener('message', (event) => {
-        const data = JSON.parse(event.data);
-        if (data.type === 'trade') {
-            const price = data.data[0].p;
-            stockPrice.textContent = price.toFixed(2);
-        }
-    });
-
-    window.addEventListener('beforeunload', (event) => {
-        socket.close();
+    fetch("/api/finnhub/token")
+    .then(response => response.text())
+    .then(token => {
+        const socket = new WebSocket(`wss://ws.finnhub.io?token=${token}`);
+        socket.addEventListener('open', (event) => {
+            socket.send(JSON.stringify({ 'type':'subscribe', 'symbol' : symbol}));
+        });
+        
+        socket.addEventListener('message', (event) => {
+            const data = JSON.parse(event.data);
+            if (data.type === 'trade') {
+                const price = data.data[0].p;
+                stockPrice.textContent = price.toFixed(2);
+            }
+        });
+        window.addEventListener('beforeunload', (event) => {
+            socket.close();
+        });
     });
 </script>
