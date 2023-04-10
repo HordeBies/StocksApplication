@@ -18,7 +18,7 @@ namespace StocksApp.Controllers
             {
                 return NotFound();
             }
-            return Content(configuration["FinnhubToken"]);
+            return Content(configuration["FinnhubToken"]!);
         }
     }
 }

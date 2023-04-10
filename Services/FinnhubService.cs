@@ -1,6 +1,7 @@
-﻿using StocksApp.ServiceContracts;
+﻿using Microsoft.Extensions.Configuration;
+using ServiceContracts;
 using System.Text.Json;
-namespace StocksApp.Services
+namespace Services
 {
     public class FinnhubService : IFinnhubService
     {
@@ -12,7 +13,7 @@ namespace StocksApp.Services
             this.httpClientFactory = httpClientFactory;
             this.configuration = configuration;
         }
-        public async Task<Dictionary<string,object>> GetQuote(string symbol)
+        public async Task<Dictionary<string,object>> GetStockPriceQuote(string symbol)
         {
             using(var httpClient = httpClientFactory.CreateClient())
             {

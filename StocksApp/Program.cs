@@ -1,5 +1,5 @@
-using StocksApp.ServiceContracts;
-using StocksApp.Services;
+using ServiceContracts;
+using Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
