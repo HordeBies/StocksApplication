@@ -2,6 +2,7 @@
 
 namespace StocksApp.Controllers
 {
+    [Route("[controller]")]
     public class ApiController : Controller
     {
         private readonly IConfiguration configuration;
@@ -11,7 +12,7 @@ namespace StocksApp.Controllers
             this.configuration = configuration;
         }
         [HttpGet]
-        [Route("/api/finnhub/token")]
+        [Route("finnhub/token")]
         public IActionResult GetFinnhubToken() //TODO: use authentication to prevent 3rd party to acces this endpoint
         {
             if (configuration["FinnhubToken"] == null)
