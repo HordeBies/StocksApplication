@@ -24,7 +24,8 @@
                     <h3 class="text-grey mb">New Order</h3>
                     <label for="Quantity" class="mt">Quantity:</label>
                     <div class="w-25">
-                        <input type="number" name="Quantity" id="Quantity" value="@Model.Quantity" min="1" max="100000" placeholder="Quantity" required="required" class="form-input mb" autofocus="autofocus" />
+                        <input type="number" asp-for=Quantity id="Quantity" min="1" max="100000" placeholder="Quantity" required="required" class="form-input mb" autofocus="autofocus" />
+                        <span asp-validation-for="Quantity" class="text-red"></span>
                     </div>
                 </div>
                 <div class="button-panel">
@@ -63,4 +64,6 @@
 
 @section Scripts {
     <script src="~/Scripts/live-stock-updates.js"></script>
+    <script asp-fallback-test="window.jQuery.validate" asp-fallback-src="~/scripts/jquery.validate.min.js" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js" integrity="sha512-rstIgDs0xPgmG6RX1Aba4KV5cWJbAMcvRCVmglpam9SoHZiUCyQVDdH2LPlxoHtrv17XWblE/V/PP+Tr04hbtA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script asp-fallback-test="window.jQuery.validate.unobtrusive" asp-fallback-src="~/scripts/jquery.validate.unobtrusive.min.js" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js" integrity="sha512-xq+Vm8jC94ynOikewaQXMEkJIOBp7iArs3IhFWSWdRT3Pq8wFz46p+ZDFAR7kHnSFf+zUv52B3prRYnbDRdgog==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 }
