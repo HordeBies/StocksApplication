@@ -1,3 +1,5 @@
+using Entities;
+using Microsoft.EntityFrameworkCore;
 using ServiceContracts.DTO;
 using Services;
 
@@ -8,10 +10,10 @@ namespace Tests
         private readonly StocksService stocksService;
         public StocksServiceTests()
         {
-            stocksService = new();
+            stocksService = new StocksService(new StockMarketDbContext(new DbContextOptionsBuilder<StockMarketDbContext>().Options)); //TODO: Unit testing using Moq
         }
         #region CreateBuyOrder
-        private BuyOrderRequest GetValidBuyOrderRequest()
+        private static BuyOrderRequest GetValidBuyOrderRequest()
         {
             return new()
             {
@@ -23,65 +25,64 @@ namespace Tests
             };
         }
         [Fact]
-        public void CreateBuyOrder_NullRequest()
+        public async Task CreateBuyOrder_NullRequest()
         {
-            Assert.Throws<ArgumentNullException>(()=>stocksService.CreateBuyOrder(null));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await stocksService.CreateBuyOrder(null));
         }
         [Fact]
-        public void CreateBuyOrder_InvalidBuyOrderQuantity_Lower()
+        public async Task CreateBuyOrder_InvalidBuyOrderQuantity_Lower()
         {
             var request = GetValidBuyOrderRequest();
             request.Quantity = 0;
-            Assert.Throws<ArgumentException>(()=>stocksService.CreateBuyOrder(request));
+            await Assert.ThrowsAsync<ArgumentException>(async () => await stocksService.CreateBuyOrder(request));
         }
         [Fact]
-        public void CreateBuyOrder_InvalidBuyOrderQuantity_Upper()
+        public async Task CreateBuyOrder_InvalidBuyOrderQuantity_Upper()
         {
             var request = GetValidBuyOrderRequest();
             request.Quantity = 100001;
-            Assert.Throws<ArgumentException>(() => stocksService.CreateBuyOrder(request));
+            await Assert.ThrowsAsync<ArgumentException>(async () => await stocksService.CreateBuyOrder(request));
         }
         [Fact]
-        public void CreateBuyOrder_InvalidPrice_Lower()
+        public async Task CreateBuyOrder_InvalidPrice_Lower()
         {
             var request = GetValidBuyOrderRequest();
             request.Price = 0;
-            Assert.Throws<ArgumentException>(() => stocksService.CreateBuyOrder(request));
+            await Assert.ThrowsAsync<ArgumentException>(async () => await stocksService.CreateBuyOrder(request));
         }
         [Fact]
-        public void CreateBuyOrder_InvalidPrice_Upper()
+        public async Task CreateBuyOrder_InvalidPrice_Upper()
         {
             var request = GetValidBuyOrderRequest();
             request.Price = 10001;
-            Assert.Throws<ArgumentException>(() => stocksService.CreateBuyOrder(request));
+            await Assert.ThrowsAsync<ArgumentException>(async () => await stocksService.CreateBuyOrder(request));
         }
         [Fact]
-        public void CreateBuyOrder_InvalidStockSymbol()
+        public async Task CreateBuyOrder_InvalidStockSymbol()
         {
             var request = GetValidBuyOrderRequest();
             request.StockSymbol = null;
-            Assert.Throws<ArgumentException>(() => stocksService.CreateBuyOrder(request));
+            await Assert.ThrowsAsync<ArgumentException>(async() => await stocksService.CreateBuyOrder(request));
         }
         [Fact]
-        public void CreateBuyOrder_InvalidDateAndTimeOfOrder()
+        public async Task CreateBuyOrder_InvalidDateAndTimeOfOrder()
         {
             var request = GetValidBuyOrderRequest();
             request.DateAndTimeOfOrder = new(1999, 12, 31);
-            Assert.Throws<ArgumentException>(() => stocksService.CreateBuyOrder(request));
+            await Assert.ThrowsAsync<ArgumentException>(async() => await stocksService.CreateBuyOrder(request));
         }
         [Fact]
-        public void CreateBuyOrder_ValidRequest()
+        public async Task CreateBuyOrder_ValidRequest()
         {
             var request = GetValidBuyOrderRequest();
-            var expected = stocksService.CreateBuyOrder(request);
-            var collection = stocksService.GetBuyOrders();
+            var expected = await stocksService.CreateBuyOrder(request);
+            var collection = await stocksService.GetBuyOrders();
             Assert.True(expected.BuyOrderID != Guid.Empty);
             Assert.Contains(expected, collection);
         }
         #endregion
         #region CreateSellOrder
-        [Fact]
-        private SellOrderRequest GetValidSellOrderRequest()
+        private static SellOrderRequest GetValidSellOrderRequest()
         {
             return new()
             {
@@ -93,72 +94,72 @@ namespace Tests
             };
         }
         [Fact]
-        public void CreateSellOrder_NullRequest()
+        public async Task CreateSellOrder_NullRequest()
         {
-            Assert.Throws<ArgumentNullException>(() => stocksService.CreateSellOrder(null));
+            await Assert.ThrowsAsync<ArgumentNullException>(async() => await stocksService.CreateSellOrder(null));
         }
         [Fact]
-        public void CreateSellOrder_InvalidSellOrderQuantity_Lower()
+        public async Task CreateSellOrder_InvalidSellOrderQuantity_Lower()
         {
             var request = GetValidSellOrderRequest();
             request.Quantity = 0;
-            Assert.Throws<ArgumentException>(() => stocksService.CreateSellOrder(request));
+            await Assert.ThrowsAsync<ArgumentException>(async () => await stocksService.CreateSellOrder(request));
         }
         [Fact]
-        public void CreateSellOrder_InvalidSellOrderQuantity_Upper()
+        public async Task CreateSellOrder_InvalidSellOrderQuantity_Upper()
         {
             var request = GetValidSellOrderRequest();
             request.Quantity = 100001;
-            Assert.Throws<ArgumentException>(() => stocksService.CreateSellOrder(request));
+            await Assert.ThrowsAsync<ArgumentException>(async () => await stocksService.CreateSellOrder(request));
         }
         [Fact]
-        public void CreateSellOrder_InvalidPrice_Lower()
+        public async Task CreateSellOrder_InvalidPrice_Lower()
         {
             var request = GetValidSellOrderRequest();
             request.Price = 0;
-            Assert.Throws<ArgumentException>(() => stocksService.CreateSellOrder(request));
+            await Assert.ThrowsAsync<ArgumentException>(async() => await stocksService.CreateSellOrder(request));
         }
         [Fact]
-        public void CreateSellOrder_InvalidPrice_Upper()
+        public async Task CreateSellOrder_InvalidPrice_Upper()
         {
             var request = GetValidSellOrderRequest();
             request.Price = 10001;
-            Assert.Throws<ArgumentException>(() => stocksService.CreateSellOrder(request));
+            await Assert.ThrowsAsync<ArgumentException>(async() => await stocksService.CreateSellOrder(request));
         }
         [Fact]
-        public void CreateSellOrder_InvalidStockSymbol()
+        public async Task CreateSellOrder_InvalidStockSymbol()
         {
             var request = GetValidSellOrderRequest();
             request.StockSymbol = null;
-            Assert.Throws<ArgumentException>(() => stocksService.CreateSellOrder(request));
+            await Assert.ThrowsAsync<ArgumentException>(async() => await stocksService.CreateSellOrder(request));
         }
         [Fact]
-        public void CreateSellOrder_InvalidDateAndTimeOfOrder()
+        public async Task CreateSellOrder_InvalidDateAndTimeOfOrder()
         {
             var request = GetValidSellOrderRequest();
             request.DateAndTimeOfOrder = new(1999, 12, 31);
-            Assert.Throws<ArgumentException>(() => stocksService.CreateSellOrder(request));
+            await Assert.ThrowsAsync<ArgumentException>(async () => await stocksService.CreateSellOrder(request));
         }
         [Fact]
-        public void CreateSellOrder_ValidRequest()
+        public async Task CreateSellOrder_ValidRequestAsync()
         {
             var request = GetValidSellOrderRequest();
-            var expected = stocksService.CreateSellOrder(request);
-            var collection = stocksService.GetSellOrders();
+            var expected = await stocksService.CreateSellOrder(request);
+            var collection = await stocksService.GetSellOrders();
             Assert.True(expected.SellOrderID != Guid.Empty);
             Assert.Contains(expected, collection);
         }
         #endregion
         #region GetBuyOrders
         [Fact]
-        public void GetBuyOrders_Empty()
+        public async Task GetBuyOrders_EmptyAsync()
         {
-            var collection = stocksService.GetBuyOrders();
+            var collection = await stocksService.GetBuyOrders();
             Assert.NotNull(collection);
             Assert.Empty(collection);
         }
         [Fact]
-        public void GetBuyOrders_ValidRequest()
+        public async Task GetBuyOrders_ValidRequestAsync()
         {
             var requests = new BuyOrderRequest[]
             {
@@ -168,9 +169,9 @@ namespace Tests
                 GetValidBuyOrderRequest(),
                 GetValidBuyOrderRequest(),
             };
-            var expected = requests.Select(r => stocksService.CreateBuyOrder(r)).ToList();
-            var actual = stocksService.GetBuyOrders();
-            Assert.Equal(expected.Count, actual.Count);
+            var expected = await Task.WhenAll(requests.Select(async r => await stocksService.CreateBuyOrder(r)));
+            var actual = await stocksService.GetBuyOrders();
+            Assert.Equal(expected.Length, actual.Count);
             foreach (var item in expected)
             {
                 Assert.Contains(item, actual);
@@ -179,14 +180,14 @@ namespace Tests
         #endregion
         #region GetSellOrders
         [Fact]
-        public void GetSellOrders_Empty()
+        public async Task GetSellOrders_EmptyAsync()
         {
-            var collection = stocksService.GetSellOrders();
+            var collection = await stocksService.GetSellOrders();
             Assert.NotNull(collection);
             Assert.Empty(collection);
         }
         [Fact]
-        public void GetSellOrders_ValidRequest()
+        public async Task GetSellOrders_ValidRequestAsync()
         {
             var requests = new SellOrderRequest[]
             {
@@ -196,9 +197,9 @@ namespace Tests
                 GetValidSellOrderRequest(),
                 GetValidSellOrderRequest(),
             };
-            var expected = requests.Select(r => stocksService.CreateSellOrder(r)).ToList();
-            var actual = stocksService.GetSellOrders();
-            Assert.Equal(expected.Count, actual.Count);
+            var expected = await Task.WhenAll(requests.Select(async r => await stocksService.CreateSellOrder(r)));
+            var actual = await stocksService.GetSellOrders();
+            Assert.Equal(expected.Length, actual.Count);
             foreach (var item in expected)
             {
                 Assert.Contains(item, actual);

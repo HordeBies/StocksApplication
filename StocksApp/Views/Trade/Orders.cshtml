@@ -4,11 +4,20 @@
     ViewBag.CurrentUrl = "~/Trade/Orders";
 }
 
-<div class="text-grey ml">
-    <span>Stocks</span>
-    <i class="fa-solid fa-caret-right"></i>
-    <span>Orders</span>
+<div class="flex">
+    <div class="flex-1">
+        <div class="text-grey ml">
+            <span>Stocks</span>
+            <i class="fa-solid fa-caret-right"></i>
+            <span>Orders</span>
+        </div>
+    </div>
+    <div class="flex1 text-right mr">
+        <a asp-controller="Trade" asp-action="OrdersPDF" class="mr">Download as PDF</a>
+    </div>
 </div>
+
+
 
 <div class="flex orders-list">
     <div id="buy-orders-list">

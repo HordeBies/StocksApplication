@@ -24,7 +24,7 @@
                     <h3 class="text-grey mb">New Order</h3>
                     <label for="Quantity" class="mt">Quantity:</label>
                     <div class="w-25">
-                        <input type="number" asp-for=Quantity id="Quantity" min="1" max="100000" placeholder="Quantity" required="required" class="form-input mb" autofocus="autofocus" />
+                        <input type="number" asp-for=Quantity id="Quantity" min="1" max="100000" placeholder="Quantity" required="required" class="form-input mb" autofocus="autofocus" value="@Model.Quantity" />
                         <span asp-validation-for="Quantity" class="text-red"></span>
                     </div>
                 </div>
