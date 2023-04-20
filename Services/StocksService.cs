@@ -1,22 +1,16 @@
-﻿using Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using RepositoryContracts;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using Services.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services
 {
     public class StocksService : IStocksService
     {
-        private readonly StockMarketDbContext db;
-        public StocksService(StockMarketDbContext stockMarketDbContext)
+        private readonly IStocksRepository stocksRepository;
+        public StocksService(IStocksRepository stocksRepository)
         {
-            db = stockMarketDbContext;
+            this.stocksRepository = stocksRepository;
         }
         public async Task<BuyOrderResponse> CreateBuyOrder(BuyOrderRequest? buyOrderRequest)
         {
@@ -27,8 +21,7 @@ namespace Services
             var buyOrder = buyOrderRequest.ToBuyOrder();
             buyOrder.BuyOrderID = Guid.NewGuid();
             
-            await db.BuyOrders.AddAsync(buyOrder);
-            await db.SaveChangesAsync();
+            buyOrder = await stocksRepository.CreateBuyOrder(buyOrder);
 
             return buyOrder.ToBuyOrderResponse();
         }
@@ -42,20 +35,19 @@ namespace Services
             var sellOrder = sellOrderRequest.ToSellOrder();
             sellOrder.SellOrderID = Guid.NewGuid();
 
-            await db.SellOrders.AddAsync(sellOrder);
-            await db.SaveChangesAsync();
+            sellOrder = await stocksRepository.CreateSellOrder(sellOrder);
 
             return sellOrder.ToSellOrderResponse();
         }
 
         public async Task<List<BuyOrderResponse>> GetBuyOrders()
         {
-            return (await db.BuyOrders.ToListAsync()).Select(i=> i.ToBuyOrderResponse()).ToList();
+            return (await stocksRepository.GetBuyOrders()).Select(i=> i.ToBuyOrderResponse()).ToList();
         }
 
         public async Task<List<SellOrderResponse>> GetSellOrders()
         {
-            return (await db.SellOrders.ToListAsync()).Select(i=>i.ToSellOrderResponse()).ToList();
+            return (await stocksRepository.GetSellOrders()).Select(i=>i.ToSellOrderResponse()).ToList();
         }
     }
 }
