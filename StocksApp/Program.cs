@@ -21,9 +21,13 @@ builder.Services.AddDbContext<StockMarketDbContext>(options =>
 
 var app = builder.Build();
 
-Rotativa.AspNetCore.RotativaConfiguration.Setup("wwwroot","Rotativa");
+if(!app.Environment.IsEnvironment("Test"))
+    Rotativa.AspNetCore.RotativaConfiguration.Setup("wwwroot","Rotativa");
+
 app.UseStaticFiles();
 app.UseRouting();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }
