@@ -30,7 +30,6 @@ namespace Tests.ControllerTests
 
             var expectedStocks = stocksDict.Select(temp => new Stock() { StockName = Convert.ToString(temp["description"]), StockSymbol = Convert.ToString(temp["symbol"]) }).ToList();
 
-
             var result = await controller.Explore(null, true);
 
             ViewResult viewResult = Assert.IsType<ViewResult>(result);
