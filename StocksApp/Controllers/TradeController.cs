@@ -22,27 +22,26 @@ namespace StocksApp.Controllers
             this.stocksService = stocksService;
         }
         [HttpGet]
-        [Route("/")]
-        [Route("[action]")]
-        [Route("~/[controller]")]
-        public async Task<IActionResult> Index()
+        [Route("[action]/{stockSymbol}")]
+        [Route("~/[controller]/{stockSymbol}")]
+        public async Task<IActionResult> Index(string? stockSymbol)
         {
-            if (string.IsNullOrEmpty(tradingOptions.DefaultStockSymbol))
-            {
-                tradingOptions.DefaultStockSymbol = "MSFT";
-            }
-            var quote = await finnhubService.GetStockPriceQuote(tradingOptions.DefaultStockSymbol);
-            var profile = await finnhubService.GetCompanyProfile(tradingOptions.DefaultStockSymbol);
+            if(string.IsNullOrEmpty(stockSymbol))
+                stockSymbol = "MSFT";
+
+            var quote = await finnhubService.GetStockPriceQuote(stockSymbol);
+            var profile = await finnhubService.GetCompanyProfile(stockSymbol);
             var model = new StockTrade()
             {
                 Price = Convert.ToDouble(quote["c"].ToString()),
                 Quantity = tradingOptions.DefaultOrderQuantity ?? 0,
                 StockName = profile["name"].ToString(),
-                StockSymbol = tradingOptions.DefaultStockSymbol
+                StockSymbol = stockSymbol
             };
             return View(model);
         }
 
+        [HttpPost]
         [Route("[action]")]
         public async Task<IActionResult> BuyOrder(BuyOrderRequest request)
         {
@@ -61,6 +60,7 @@ namespace StocksApp.Controllers
 
             return RedirectToAction(nameof(Orders));
         }
+        [HttpPost]
         [Route("[action]")]
         public async Task<IActionResult> SellOrder(SellOrderRequest request)
         {
@@ -79,6 +79,7 @@ namespace StocksApp.Controllers
 
             return RedirectToAction(nameof(Orders));
         }
+        [HttpGet]
         [Route("[action]")]
         public async Task<IActionResult> Orders()
         {
@@ -90,6 +91,7 @@ namespace StocksApp.Controllers
             return View(orders);
         }
 
+        [HttpGet]
         [Route("[action]")]
         public async Task<IActionResult> OrdersPDF()
         {

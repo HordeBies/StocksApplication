@@ -257,6 +257,11 @@
             color: #ffffff;
         }
 
+    .list a:link, .list a:visited {
+        color: initial;
+        text-decoration: none;
+    }
+
 .footer-content {
     background-color: #bfbfbf;
     color: #000000;
@@ -351,6 +356,19 @@ a.link-hover:hover {
     background-color: #e5e5e5;
 }
 
+a.button-link:link, a.button-link:visited {
+    color: #ffffff;
+    padding: 8px 12px;
+    border: 2px solid #cacaca;
+    border-radius: 8px;
+    outline: 3px solid #ffffff;
+    font-size: 130%;
+    text-decoration: none;
+    display: inline-block;
+}
+
+
+
 .button {
     padding: 8px 12px;
     border: 2px solid #cacaca;
@@ -394,6 +412,14 @@ a.link-hover:hover {
     margin-top: 20px;
 }
 
+.pill {
+    background-color: #9e9e9eff;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 10px;
+    margin: 7px 0px;
+    display: inline-block;
+}
 
 .search-text {
     padding: 8px 10px;
@@ -477,6 +503,10 @@ a.link-hover:hover {
     background-color: #f0f0f0;
 }
 
+#trade-button {
+    margin-top: 30px;
+}
+
 .trading-panel-flex {
     flex-direction: column;
 }
@@ -506,6 +536,16 @@ a.link-hover:hover {
     flex: 1 auto;
 }
 
+.stocks-list {
+    flex-direction: column;
+}
+
+#stocks-list {
+    min-width: 600px;
+    max-width: 700px;
+}
+
+
 
 @media screen and (min-width: 1000px) {
     #top-bar-div {
@@ -533,7 +573,7 @@ a.link-hover:hover {
 
     #new-order-panel {
         padding-left: 90px;
-        padding-top: 20px;
+        padding-top: 220px;
         flex: 1 0 auto;
     }
 
@@ -564,6 +604,10 @@ a.link-hover:hover {
     }
 
     .orders-list {
+        flex-direction: row;
+    }
+
+    .stocks-list {
         flex-direction: row;
     }
 }

@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Stock>
+
+@{
+    ViewBag.Title = "Explore";
+    ViewBag.CurrentUrl = "~/Explore";
+}
+
+<div class="text-grey ml">
+    <span>Stocks</span>
+    <i class="fa-solid fa-caret-right"></i>
+    <span>Explore</span>
+</div>
+
+<div class="flex stocks-list">
+    <div class="flex-1" id="stocks-list">
+        <div class="box">
+            <div class="flex">
+                <div class="flex-1">
+                    <h4 class="text-grey mb">Stocks</h4>
+                </div>
+                <div class="flex-1 text-right">
+                    @if (ViewBag.ShowAll)
+                    {
+                        <a href="~/Stocks/Explore?showAll=false" class="mr">Show top 25 stocks</a>
+                    }
+                    else
+                    {
+                        <a href="~/Stocks/Explore?showAll=true" class="mr">Show all stocks</a>
+                    }
+                </div>
+            </div>
+
+            <ul class="list">
+                @foreach (Stock stock in Model)
+                {
+                    <li>
+                        <a href="~/Stocks/Explore/@stock.StockSymbol?showAll=@ViewBag.ShowAll">
+                            <h4>@stock.StockName</h4>
+                            <div class="text-grey">(@stock.StockSymbol)</div>
+                        </a>
+                    </li>
+                }
+            </ul>
+            @if (Model.Count() == 0)
+            {
+                <div class="mt text-blue">No stocks</div>
+            }
+        </div>
+    </div>
+    <div class="flex-1" id="stock-details">
+        @if (ViewBag.Stock != null)
+        {
+            <vc:selected-stock stock-symbol="@ViewBag.Stock"></vc:selected-stock>
+        }
+    </div>
+</div>

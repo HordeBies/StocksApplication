@@ -30,21 +30,29 @@
             </div>
             <div class="navbar mb">
                 <ul>
-                    @if (ViewBag.CurrentURL == "~/Trade/Index")
+                    @if (ViewBag.CurrentUrl == "~/Explore")
                     {
-                        <li><a href="~/Trade/Index" class="nav-active">Trade</a></li>
+                        <li><a asp-controller="Stocks" asp-action="Explore" class="nav-active">Explore</a></li>
                     }
                     else
                     {
-                        <li><a href="~/Trade/Index">Trade</a></li>
+                        <li><a asp-controller="Stocks" asp-action="Explore">Explore</a></li>
+                    }
+                    @if (ViewBag.CurrentURL == "~/Trade/Index")
+                    {
+                        <li><a href="" class="nav-active">Trade</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="">Trade</a></li>
                     }
                     @if (ViewBag.CurrentURL == "~/Trade/Orders")
                     {
-                        <li><a href="~/Trade/Orders" class="nav-active">Orders</a></li>
+                        <li><a asp-controller="Trade" asp-action="Orders" class="nav-active">Orders</a></li>
                     }
                     else
                     {
-                        <li><a href="~/Trade/Orders">Orders</a></li>
+                        <li><a asp-controller="Trade" asp-action="Orders">Orders</a></li>
                     }
                 </ul>
             </div>
