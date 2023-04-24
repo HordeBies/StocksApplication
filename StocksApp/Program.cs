@@ -1,29 +1,25 @@
-using Entities;
-using Microsoft.EntityFrameworkCore;
-using Repositories;
-using RepositoryContracts;
-using ServiceContracts;
-using Services;
-using StocksApp;
+using Serilog;
+using StocksApp.StartupExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddControllersWithViews();
-builder.Services.AddHttpClient();
-builder.Services.Configure<TradingOptions>(builder.Configuration.GetSection("TradingOptions"));
-builder.Services.AddScoped<IFinnhubService,FinnhubService>();
-builder.Services.AddScoped<IFinnhubRepository, FinnhubRepository>();
-builder.Services.AddScoped<IStocksService,StocksService>();
-builder.Services.AddScoped<IStocksRepository, StocksRepository>();
-builder.Services.AddDbContext<StockMarketDbContext>(options =>
+
+builder.Host.UseSerilog((HostBuilderContext context, IServiceProvider services, LoggerConfiguration loggerConfiguration) =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("StockMarketConnection"));
+    loggerConfiguration
+    .ReadFrom.Configuration(context.Configuration)
+    .ReadFrom.Services(services)
+    .Enrich.FromLogContext();
+
 });
+builder.Services.ConfigureServices(builder.Configuration);
 
 var app = builder.Build();
 
 if(!app.Environment.IsEnvironment("Test"))
     Rotativa.AspNetCore.RotativaConfiguration.Setup("wwwroot","Rotativa");
 
+app.UseSerilogRequestLogging();
+app.UseHttpLogging();
 app.UseStaticFiles();
 app.UseRouting();
 app.MapControllers();

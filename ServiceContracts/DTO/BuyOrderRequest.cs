@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ServiceContracts.DTO
 {
-    public class BuyOrderRequest : IValidatableObject
+    public class BuyOrderRequest : IOrderRequest, IValidatableObject
     {
         [Required]
         public string StockSymbol { get; set; }

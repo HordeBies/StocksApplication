@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using RepositoryContracts;
+using Serilog;
 using System.Text.Json;
 
 namespace Repositories
@@ -8,13 +10,18 @@ namespace Repositories
     {
         private readonly IHttpClientFactory httpClientFactory;
         private readonly IConfiguration configuration;
-        public FinnhubRepository(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        private readonly ILogger<FinnhubRepository> logger;
+        public FinnhubRepository(ILogger<FinnhubRepository> logger ,IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
+            this.logger = logger;
             this.httpClientFactory = httpClientFactory;
             this.configuration = configuration;
         }
         public async Task<Dictionary<string, object>?> GetStockPriceQuote(string symbol)
         {
+            //Log
+            logger.LogInformation("In {ClassName}.{MethodName}", nameof(FinnhubRepository), nameof(GetStockPriceQuote));
+
             using (var httpClient = httpClientFactory.CreateClient())
             {
                 HttpRequestMessage httpRequestMessage = new()
@@ -24,7 +31,7 @@ namespace Repositories
                 };
 
                 HttpResponseMessage httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
-                string response = new StreamReader(httpResponseMessage.Content.ReadAsStream()).ReadToEnd();
+                string response = await httpResponseMessage.Content.ReadAsStringAsync();
                 var responseDictionary = JsonSerializer.Deserialize<Dictionary<string, object>>(response);
                 if (responseDictionary == null)
                 {
@@ -39,6 +46,9 @@ namespace Repositories
         }
         public async Task<Dictionary<string, object>?> GetCompanyProfile(string symbol)
         {
+            //Log
+            logger.LogInformation("In {ClassName}.{MethodName}", nameof(FinnhubRepository), nameof(GetCompanyProfile));
+
             using (var httpClient = httpClientFactory.CreateClient())
             {
                 HttpRequestMessage httpRequestMessage = new()
@@ -47,7 +57,7 @@ namespace Repositories
                     Method = HttpMethod.Get
                 };
                 HttpResponseMessage httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
-                string response = new StreamReader(httpResponseMessage.Content.ReadAsStream()).ReadToEnd();
+                string response = await httpResponseMessage.Content.ReadAsStringAsync();
                 var responseDictionary = JsonSerializer.Deserialize<Dictionary<string, object>>(response);
                 if (responseDictionary == null)
                 {
@@ -63,6 +73,9 @@ namespace Repositories
 
         public async Task<List<Dictionary<string, string>>?> GetStocks()
         {
+            //Log
+            logger.LogInformation("In {ClassName}.{MethodName}", nameof(FinnhubRepository), nameof(GetStocks));
+
             using (var httpClient = httpClientFactory.CreateClient())
             {
                 HttpRequestMessage httpRequestMessage = new()
@@ -71,7 +84,7 @@ namespace Repositories
                     Method = HttpMethod.Get
                 };
                 HttpResponseMessage httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
-                string response = new StreamReader(httpResponseMessage.Content.ReadAsStream()).ReadToEnd();
+                string response = await httpResponseMessage.Content.ReadAsStringAsync();
                 var responseDictionary = JsonSerializer.Deserialize<List<Dictionary<string, string>>>(response);
                 if (responseDictionary == null)
                 {
@@ -83,6 +96,9 @@ namespace Repositories
 
         public async Task<Dictionary<string, object>?> SearchStocks(string symbol)
         {
+            //Log
+            logger.LogInformation("In {ClassName}.{MethodName}", nameof(FinnhubRepository), nameof(SearchStocks));
+
             using (var httpClient = httpClientFactory.CreateClient())
             {
                 HttpRequestMessage httpRequestMessage = new()
@@ -91,7 +107,7 @@ namespace Repositories
                     Method = HttpMethod.Get
                 };
                 HttpResponseMessage httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
-                string response = new StreamReader(httpResponseMessage.Content.ReadAsStream()).ReadToEnd();
+                string response = await httpResponseMessage.Content.ReadAsStringAsync();
                 var responseDictionary = JsonSerializer.Deserialize<Dictionary<string, object>>(response);
                 if (responseDictionary == null)
                 {

@@ -5,6 +5,7 @@ using ServiceContracts;
 using Services;
 using ServiceContracts.DTO;
 using Rotativa.AspNetCore;
+using StocksApp.Filters.ActionFilters;
 
 namespace StocksApp.Controllers
 {
@@ -43,39 +44,19 @@ namespace StocksApp.Controllers
 
         [HttpPost]
         [Route("[action]")]
-        public async Task<IActionResult> BuyOrder(BuyOrderRequest request)
+        [CreateOrderActionFilter]
+        public async Task<IActionResult> BuyOrder(BuyOrderRequest orderRequest)
         {
-            request.DateAndTimeOfOrder = DateTime.Now;
-            ModelState.Clear();
-            TryValidateModel(request);
-
-            if (!ModelState.IsValid)
-            {
-                ViewBag.Errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                var stockTrade = new StockTrade() { StockName = request.StockName, Quantity = request.Quantity, StockSymbol = request.StockSymbol };
-                return View("Index", stockTrade);
-            }
-
-            var response = await stocksService.CreateBuyOrder(request);
+            var response = await stocksService.CreateBuyOrder(orderRequest);
 
             return RedirectToAction(nameof(Orders));
         }
         [HttpPost]
         [Route("[action]")]
-        public async Task<IActionResult> SellOrder(SellOrderRequest request)
+        [CreateOrderActionFilter]
+        public async Task<IActionResult> SellOrder(SellOrderRequest orderRequest)
         {
-            request.DateAndTimeOfOrder = DateTime.Now;
-            ModelState.Clear();
-            TryValidateModel(request);
-
-            if (!ModelState.IsValid)
-            {
-                ViewBag.Errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                var stockTrade = new StockTrade() { StockName = request.StockName, Quantity = request.Quantity, StockSymbol = request.StockSymbol };
-                return View("Index", stockTrade);
-            }
-
-            var response = await stocksService.CreateSellOrder(request);
+            var response = await stocksService.CreateSellOrder(orderRequest);
 
             return RedirectToAction(nameof(Orders));
         }
