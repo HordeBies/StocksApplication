@@ -2,6 +2,7 @@ using RepositoryContracts;
 using ServiceContracts.DTO;
 using Services;
 using Entities;
+using Services.StocksService;
 
 namespace Tests.ServiceTests
 {
@@ -9,7 +10,8 @@ namespace Tests.ServiceTests
     {
         private readonly IFixture fixture;
 
-        private readonly StocksService stocksService;
+        private readonly StocksBuyOrdersService stocksBuyOrdersService;
+        private readonly StocksSellOrdersService stocksSellOrdersService;
 
         private readonly Mock<IStocksRepository> mock;
         private readonly IStocksRepository repository;
@@ -19,13 +21,15 @@ namespace Tests.ServiceTests
             fixture = new Fixture();
             mock = new();
             repository = mock.Object;
-            stocksService = new StocksService(repository); //TODO: Unit testing using Moq
+            
+            stocksBuyOrdersService = new(repository);
+            stocksSellOrdersService = new(repository);
         }
         #region CreateBuyOrder
         [Fact]
         public async Task CreateBuyOrder_NullBuyOrder()
         {
-            var action = (async () => await stocksService.CreateBuyOrder(null));
+            var action = (async () => await stocksBuyOrdersService.CreateBuyOrder(null));
             await action.Should().ThrowAsync<ArgumentNullException>();
         }
         [Theory]
@@ -35,7 +39,7 @@ namespace Tests.ServiceTests
             var request = fixture.Build<BuyOrderRequest>()
                 .With(r => r.Quantity, buyOrderQuantity)
                 .Create();
-            var action = (async () => await stocksService.CreateBuyOrder(request));
+            var action = (async () => await stocksBuyOrdersService.CreateBuyOrder(request));
             await action.Should().ThrowAsync<ArgumentException>();
         }
         [Theory]
@@ -45,7 +49,7 @@ namespace Tests.ServiceTests
             var request = fixture.Build<BuyOrderRequest>()
                 .With(r => r.Quantity, buyOrderQuantity)
                 .Create();
-            var action = (async () => await stocksService.CreateBuyOrder(request));
+            var action = (async () => await stocksBuyOrdersService.CreateBuyOrder(request));
             await action.Should().ThrowAsync<ArgumentException>();
         }
         [Theory]
@@ -55,7 +59,7 @@ namespace Tests.ServiceTests
             var request = fixture.Build<BuyOrderRequest>()
                 .With(r => r.Price, buyOrderPrice)
                 .Create();
-            var action = (async () => await stocksService.CreateBuyOrder(request));
+            var action = (async () => await stocksBuyOrdersService.CreateBuyOrder(request));
             await action.Should().ThrowAsync<ArgumentException>();
         }
         [Theory]
@@ -65,7 +69,7 @@ namespace Tests.ServiceTests
             var request = fixture.Build<BuyOrderRequest>()
                 .With(r => r.Price, buyOrderPrice)
                 .Create();
-            var action = (async () => await stocksService.CreateBuyOrder(request));
+            var action = (async () => await stocksBuyOrdersService.CreateBuyOrder(request));
             await action.Should().ThrowAsync<ArgumentException>();
         }
         [Fact]
@@ -74,7 +78,7 @@ namespace Tests.ServiceTests
             var request = fixture.Build<BuyOrderRequest>()
                 .With(temp => temp.StockSymbol, null as string)
                 .Create();
-            var action = (async () => await stocksService.CreateBuyOrder(request));
+            var action = (async () => await stocksBuyOrdersService.CreateBuyOrder(request));
             await action.Should().ThrowAsync<ArgumentException>();
         }
         [Fact]
@@ -83,7 +87,7 @@ namespace Tests.ServiceTests
             var request = fixture.Build<BuyOrderRequest>()
                 .With(temp => temp.DateAndTimeOfOrder, new DateTime(1999,12,31))
                 .Create();
-            var action = (async () => await stocksService.CreateBuyOrder(request));
+            var action = (async () => await stocksBuyOrdersService.CreateBuyOrder(request));
             await action.Should().ThrowAsync<ArgumentException>();
         }
         [Fact]
@@ -94,7 +98,7 @@ namespace Tests.ServiceTests
             mock.Setup(r => r.CreateBuyOrder(It.IsAny<BuyOrder>())).ReturnsAsync(order);
             var expected = order.ToBuyOrderResponse();
             
-            var actual = await stocksService.CreateBuyOrder(request);
+            var actual = await stocksBuyOrdersService.CreateBuyOrder(request);
             expected.BuyOrderID = actual.BuyOrderID;
 
             actual.BuyOrderID.Should().NotBeEmpty();
@@ -106,7 +110,7 @@ namespace Tests.ServiceTests
         [Fact]
         public async Task CreateSellOrder_NullSellOrder()
         {
-            var action = (async () => await stocksService.CreateSellOrder(null));
+            var action = (async () => await stocksSellOrdersService.CreateSellOrder(null));
             await action.Should().ThrowAsync<ArgumentNullException>();
         }
         [Theory]
@@ -116,7 +120,7 @@ namespace Tests.ServiceTests
             var request = fixture.Build<SellOrderRequest>()
                 .With(r => r.Quantity, sellOrderQuantity)
                 .Create();
-            var action = (async () => await stocksService.CreateSellOrder(null));
+            var action = (async () => await stocksSellOrdersService.CreateSellOrder(null));
             await action.Should().ThrowAsync<ArgumentException>();
         }
         [Theory]
@@ -126,7 +130,7 @@ namespace Tests.ServiceTests
             var request = fixture.Build<SellOrderRequest>()
                 .With(r => r.Quantity, sellOrderQuantity)
                 .Create();
-            var action = (async () => await stocksService.CreateSellOrder(null));
+            var action = (async () => await stocksSellOrdersService.CreateSellOrder(null));
             await action.Should().ThrowAsync<ArgumentException>();
         }
         [Theory]
@@ -136,7 +140,7 @@ namespace Tests.ServiceTests
             var request = fixture.Build<SellOrderRequest>()
                 .With(r => r.Price, sellOrderPrice)
                 .Create();
-            var action = (async () => await stocksService.CreateSellOrder(null));
+            var action = (async () => await stocksSellOrdersService.CreateSellOrder(null));
             await action.Should().ThrowAsync<ArgumentException>();
         }
         [Theory]
@@ -146,7 +150,7 @@ namespace Tests.ServiceTests
             var request = fixture.Build<SellOrderRequest>()
                 .With(r => r.Price, sellOrderPrice)
                 .Create();
-            var action = (async () => await stocksService.CreateSellOrder(null));
+            var action = (async () => await stocksSellOrdersService.CreateSellOrder(null));
             await action.Should().ThrowAsync<ArgumentException>();
         }
         [Fact]
@@ -155,7 +159,7 @@ namespace Tests.ServiceTests
             var request = fixture.Build<SellOrderRequest>()
                 .With(r => r.StockSymbol, null as string)
                 .Create();
-            var action = (async () => await stocksService.CreateSellOrder(null));
+            var action = (async () => await stocksSellOrdersService.CreateSellOrder(null));
             await action.Should().ThrowAsync<ArgumentException>();
         }
         [Fact]
@@ -164,7 +168,7 @@ namespace Tests.ServiceTests
             var request = fixture.Build<SellOrderRequest>()
                 .With(r => r.DateAndTimeOfOrder, new DateTime(1999,12,31))
                 .Create();
-            var action = (async () => await stocksService.CreateSellOrder(null));
+            var action = (async () => await stocksSellOrdersService.CreateSellOrder(null));
             await action.Should().ThrowAsync<ArgumentException>();
         }
         [Fact]
@@ -175,7 +179,7 @@ namespace Tests.ServiceTests
             mock.Setup(r => r.CreateSellOrder(It.IsAny<SellOrder>())).ReturnsAsync(order);
             var expected = order.ToSellOrderResponse();
 
-            var actual = await stocksService.CreateSellOrder(request);
+            var actual = await stocksSellOrdersService.CreateSellOrder(request);
             expected.SellOrderID = actual.SellOrderID;
 
             actual.SellOrderID.Should().NotBeEmpty();
@@ -188,7 +192,7 @@ namespace Tests.ServiceTests
         {
             mock.Setup(r => r.GetBuyOrders()).ReturnsAsync(new List<BuyOrder>());
 
-            var collection = await stocksService.GetBuyOrders();
+            var collection = await stocksBuyOrdersService.GetBuyOrders();
 
             collection.Should().NotBeNull().And.BeEmpty();
         }
@@ -199,7 +203,7 @@ namespace Tests.ServiceTests
             mock.Setup(r => r.GetBuyOrders()).ReturnsAsync(orders);
             var expected = orders.Select(o => o.ToBuyOrderResponse());
 
-            var actual = await stocksService.GetBuyOrders();
+            var actual = await stocksBuyOrdersService.GetBuyOrders();
             
             actual.Count.Should().Be(expected.Count());
             actual.Should().BeEquivalentTo(expected);
@@ -211,7 +215,7 @@ namespace Tests.ServiceTests
         {
             mock.Setup(r => r.GetSellOrders()).ReturnsAsync(new List<SellOrder>());
 
-            var collection = await stocksService.GetSellOrders();
+            var collection = await stocksSellOrdersService.GetSellOrders();
 
             collection.Should().NotBeNull().And.BeEmpty();
         }
@@ -222,7 +226,7 @@ namespace Tests.ServiceTests
             mock.Setup(r => r.GetSellOrders()).ReturnsAsync(orders);
             var expected = orders.Select(o => o.ToSellOrderResponse());
 
-            var actual = await stocksService.GetSellOrders();
+            var actual = await stocksSellOrdersService.GetSellOrders();
             
             actual.Count.Should().Be(expected.Count());
             actual.Should().BeEquivalentTo(expected);

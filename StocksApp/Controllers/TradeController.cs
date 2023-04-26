@@ -6,6 +6,8 @@ using Services;
 using ServiceContracts.DTO;
 using Rotativa.AspNetCore;
 using StocksApp.Filters.ActionFilters;
+using ServiceContracts.FinnhubService;
+using ServiceContracts.StocksService;
 
 namespace StocksApp.Controllers
 {
@@ -13,25 +15,25 @@ namespace StocksApp.Controllers
     public class TradeController : Controller
     {
         private readonly TradingOptions tradingOptions;
-        private readonly IFinnhubService finnhubService;
-        private readonly IStocksService stocksService;
+        private readonly IStocksBuyOrdersService stocksBuyOrdersService;
+        private readonly IStocksSellOrdersService stocksSellOrdersService;
 
-        public TradeController(IOptions<TradingOptions> tradingOptions, IFinnhubService finnhubService, IStocksService stocksService)
+        public TradeController(IOptions<TradingOptions> tradingOptions, IStocksBuyOrdersService stocksBuyOrdersService, IStocksSellOrdersService stocksSellOrdersService) //Injected services via constructor because they are used in multiple methods
         {
             this.tradingOptions = tradingOptions.Value;
-            this.finnhubService = finnhubService;
-            this.stocksService = stocksService;
+            this.stocksBuyOrdersService = stocksBuyOrdersService;
+            this.stocksSellOrdersService = stocksSellOrdersService;
         }
         [HttpGet]
         [Route("[action]/{stockSymbol}")]
         [Route("~/[controller]/{stockSymbol}")]
-        public async Task<IActionResult> Index(string? stockSymbol)
+        public async Task<IActionResult> Index([FromServices] IFinnhubCompanyProfileService finnhubCompanyProfileService,[FromServices] IFinnhubStockPriceQuoteService finnhubStockPriceQuoteService, string? stockSymbol) //Injected services via parameter because they are not used in other methods
         {
             if(string.IsNullOrEmpty(stockSymbol))
                 stockSymbol = "MSFT";
 
-            var quote = await finnhubService.GetStockPriceQuote(stockSymbol);
-            var profile = await finnhubService.GetCompanyProfile(stockSymbol);
+            var quote = await finnhubStockPriceQuoteService.GetStockPriceQuote(stockSymbol);
+            var profile = await finnhubCompanyProfileService.GetCompanyProfile(stockSymbol);
             var model = new StockTrade()
             {
                 Price = Convert.ToDouble(quote["c"].ToString()),
@@ -47,7 +49,7 @@ namespace StocksApp.Controllers
         [CreateOrderActionFilter]
         public async Task<IActionResult> BuyOrder(BuyOrderRequest orderRequest)
         {
-            var response = await stocksService.CreateBuyOrder(orderRequest);
+            var response = await stocksBuyOrdersService.CreateBuyOrder(orderRequest);
 
             return RedirectToAction(nameof(Orders));
         }
@@ -56,7 +58,7 @@ namespace StocksApp.Controllers
         [CreateOrderActionFilter]
         public async Task<IActionResult> SellOrder(SellOrderRequest orderRequest)
         {
-            var response = await stocksService.CreateSellOrder(orderRequest);
+            var response = await stocksSellOrdersService.CreateSellOrder(orderRequest);
 
             return RedirectToAction(nameof(Orders));
         }
@@ -64,8 +66,8 @@ namespace StocksApp.Controllers
         [Route("[action]")]
         public async Task<IActionResult> Orders()
         {
-            var buyOrders = await stocksService.GetBuyOrders();
-            var sellOrders = await stocksService.GetSellOrders();
+            var buyOrders = await stocksBuyOrdersService.GetBuyOrders();
+            var sellOrders = await stocksSellOrdersService.GetSellOrders();
 
             var orders = new Orders() { BuyOrders = buyOrders, SellOrders = sellOrders };
 
@@ -77,8 +79,8 @@ namespace StocksApp.Controllers
         public async Task<IActionResult> OrdersPDF()
         {
             List<IOrderResponse> orders = new List<IOrderResponse>();
-            orders.AddRange(await stocksService.GetBuyOrders());
-            orders.AddRange(await stocksService.GetSellOrders());
+            orders.AddRange(await stocksBuyOrdersService.GetBuyOrders());
+            orders.AddRange(await stocksSellOrdersService.GetSellOrders());
             
             orders = orders.OrderByDescending(temp => temp.DateAndTimeOfOrder).ToList();
 

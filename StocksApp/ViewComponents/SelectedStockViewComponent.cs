@@ -1,23 +1,26 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ServiceContracts;
+using ServiceContracts.FinnhubService;
 using Services;
 
 namespace StocksApp.ViewComponents
 {
     public class SelectedStockViewComponent : ViewComponent
     {
-        private readonly IFinnhubService finnhubService;
-        public SelectedStockViewComponent(IFinnhubService finnhubService)
+        private readonly IFinnhubCompanyProfileService finnhubCompanyProfileService;
+        private readonly IFinnhubStockPriceQuoteService finnhubStockPriceQuoteService;
+        public SelectedStockViewComponent(IFinnhubCompanyProfileService finnhubCompanyProfileService, IFinnhubStockPriceQuoteService finnhubStockPriceQuoteService)
         {
-            this.finnhubService = finnhubService;
+            this.finnhubCompanyProfileService = finnhubCompanyProfileService;
+            this.finnhubStockPriceQuoteService = finnhubStockPriceQuoteService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(string? stockSymbol)
         {
             if (string.IsNullOrEmpty(stockSymbol))
                 return Content("");
-            var profile = await finnhubService.GetCompanyProfile(stockSymbol);
-            var quote = await finnhubService.GetStockPriceQuote(stockSymbol);
+            var profile = await finnhubCompanyProfileService.GetCompanyProfile(stockSymbol);
+            var quote = await finnhubStockPriceQuoteService.GetStockPriceQuote(stockSymbol);
             if (quote != null && profile != null)
             {
                 profile.Add("price", quote["c"]);

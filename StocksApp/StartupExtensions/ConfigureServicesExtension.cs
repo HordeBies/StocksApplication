@@ -4,7 +4,11 @@ using Repositories;
 using RepositoryContracts;
 using Serilog;
 using ServiceContracts;
+using ServiceContracts.FinnhubService;
+using ServiceContracts.StocksService;
 using Services;
+using Services.FinnhubService;
+using Services.StocksService;
 using StocksApp.Filters.ActionFilters;
 
 namespace StocksApp.StartupExtensions
@@ -21,10 +25,17 @@ namespace StocksApp.StartupExtensions
             services.AddTransient<CreateOrderActionFilter>();
 
             //Custom Services
-            services.AddScoped<IFinnhubService, FinnhubService>();
+            //Finnhub Services
             services.AddScoped<IFinnhubRepository, FinnhubRepository>();
-            services.AddScoped<IStocksService, StocksService>();
+            services.AddScoped<IFinnhubCompanyProfileService, FinnhubCompanyProfileService>();
+            services.AddScoped<IFinnhubSearchStocksService, FinnhubSearchStocksService>();
+            services.AddScoped<IFinnhubStockPriceQuoteService, FinnhubStockPriceQuoteService>();
+            services.AddScoped<IFinnhubStocksService, FinnhubStocksService>();
+            //Stocks Services
             services.AddScoped<IStocksRepository, StocksRepository>();
+            services.AddScoped<IStocksBuyOrdersService, StocksBuyOrdersService>();
+            services.AddScoped<IStocksSellOrdersService, StocksSellOrdersService>();
+
             services.AddDbContext<StockMarketDbContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("StockMarketConnection"));
