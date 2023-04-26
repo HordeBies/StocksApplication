@@ -1,4 +1,5 @@
 using Serilog;
+using StocksApp.Middlewares;
 using StocksApp.StartupExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +18,14 @@ var app = builder.Build();
 
 if(!app.Environment.IsEnvironment("Test"))
     Rotativa.AspNetCore.RotativaConfiguration.Setup("wwwroot","Rotativa");
+
+if (app.Environment.IsDevelopment())
+    app.UseDeveloperExceptionPage();
+else
+{
+    app.UseExceptionHandler("/Error");
+    app.UseExceptionHandlingMiddleware();
+}
 
 app.UseSerilogRequestLogging();
 app.UseHttpLogging();

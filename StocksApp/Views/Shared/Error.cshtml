@@ -1,0 +1,11 @@
+﻿@{
+    ViewBag.Title = "Error";
+    if (ViewBag.ErrorMessage == null)
+        ViewBag.ErrorMessage = "An Unknown Error Occurred";
+}
+
+<div class="text-center">
+    <h1 class="text-red">Error @ViewBag.StatusCode</h1>
+
+    @* <img src="~/error.png" width="750px" />*@
+</div>

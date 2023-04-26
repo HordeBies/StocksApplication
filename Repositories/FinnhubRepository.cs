@@ -11,9 +11,11 @@ namespace Repositories
         private readonly IHttpClientFactory httpClientFactory;
         private readonly IConfiguration configuration;
         private readonly ILogger<FinnhubRepository> logger;
-        public FinnhubRepository(ILogger<FinnhubRepository> logger ,IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        private readonly IDiagnosticContext diagnostic;
+        public FinnhubRepository(ILogger<FinnhubRepository> logger, IDiagnosticContext diagnosticContext ,IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             this.logger = logger;
+            this.diagnostic = diagnosticContext;
             this.httpClientFactory = httpClientFactory;
             this.configuration = configuration;
         }
@@ -32,6 +34,7 @@ namespace Repositories
 
                 HttpResponseMessage httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
                 string response = await httpResponseMessage.Content.ReadAsStringAsync();
+                diagnostic.Set("Finnhub Response", response);
                 var responseDictionary = JsonSerializer.Deserialize<Dictionary<string, object>>(response);
                 if (responseDictionary == null)
                 {
@@ -58,6 +61,7 @@ namespace Repositories
                 };
                 HttpResponseMessage httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
                 string response = await httpResponseMessage.Content.ReadAsStringAsync();
+                diagnostic.Set("Finnhub Response", response);
                 var responseDictionary = JsonSerializer.Deserialize<Dictionary<string, object>>(response);
                 if (responseDictionary == null)
                 {
@@ -85,6 +89,7 @@ namespace Repositories
                 };
                 HttpResponseMessage httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
                 string response = await httpResponseMessage.Content.ReadAsStringAsync();
+                //diagnostic.Set("Finnhub Response", response);
                 var responseDictionary = JsonSerializer.Deserialize<List<Dictionary<string, string>>>(response);
                 if (responseDictionary == null)
                 {
@@ -108,6 +113,7 @@ namespace Repositories
                 };
                 HttpResponseMessage httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
                 string response = await httpResponseMessage.Content.ReadAsStringAsync();
+                diagnostic.Set("Finnhub Response", response);
                 var responseDictionary = JsonSerializer.Deserialize<Dictionary<string, object>>(response);
                 if (responseDictionary == null)
                 {
