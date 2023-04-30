@@ -1,0 +1,69 @@
+﻿@model Stocks.Web.Models.StockTrade
+@{
+    ViewBag.Title = "Trade";
+    ViewBag.CurrentURL = "~/Trade/Index";
+}
+
+<div class="text-grey ml">
+    <span>Stocks</span>
+    <i class="fa-solid fa-caret-right"></i>
+    <span>@Model.StockName</span>
+</div>
+
+<form method="post">
+    <div class="box trading-panel">
+        <div class="flex trading-panel-flex">
+            <div id="stock-price-panel">
+                <div class="stock">
+                    <h1 class="stock-title">@Model.StockName (@Model.StockSymbol)</h1>
+                    <h2 class="stock-price"><small class="text-grey">$</small><span class="price" id="StockPrice">@Model.Price.ToString("N")</span></h2>
+                </div>
+            </div>
+            <div id="new-order-panel">
+                <div class="flex flex-direction-vertical">
+                    <h3 class="text-grey mb">New Order</h3>
+                    <label for="Quantity" class="mt">Quantity:</label>
+                    <div class="w-25">
+                        <input type="number" asp-for=Quantity id="Quantity" min="1" max="100000" placeholder="Quantity" required="required" class="form-input mb" autofocus="autofocus" value="@Model.Quantity" />
+                        <span asp-validation-for="Quantity" class="text-red"></span>
+                    </div>
+                </div>
+                <div class="button-panel">
+
+                    <button type="submit" formaction="~/Trade/SellOrder" class="button button-red-back trading-button sell-button">
+                        <i class="fa-solid fa-arrow-down"></i>
+                        <span>Sell</span>
+                    </button>
+
+                    <button type="submit" formaction="~/Trade/BuyOrder" class="button button-green-back trading-button buy-button">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        <span>Buy</span>
+                    </button>
+
+                    @if (ViewBag.Errors != null)
+                    {
+                        <div class="text-red mt">
+                            <ul>
+                                @foreach (string error in ViewBag.Errors)
+                                {
+                                    <li class="ml">@error</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" name="StockSymbol" id="StockSymbol" value="@Model.StockSymbol" />
+    <input type="hidden" name="StockName" id="StockName" value="@Model.StockName" />
+    <input type="hidden" name="Price" id="price" value="@Model.Price" />
+
+</form>
+
+@section Scripts {
+    <script src="~/Scripts/live-stock-updates.js"></script>
+    <script asp-fallback-test="window.jQuery.validate" asp-fallback-src="~/scripts/jquery.validate.min.js" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js" integrity="sha512-rstIgDs0xPgmG6RX1Aba4KV5cWJbAMcvRCVmglpam9SoHZiUCyQVDdH2LPlxoHtrv17XWblE/V/PP+Tr04hbtA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script asp-fallback-test="window.jQuery.validate.unobtrusive" asp-fallback-src="~/scripts/jquery.validate.unobtrusive.min.js" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js" integrity="sha512-xq+Vm8jC94ynOikewaQXMEkJIOBp7iArs3IhFWSWdRT3Pq8wFz46p+ZDFAR7kHnSFf+zUv52B3prRYnbDRdgog==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+}
