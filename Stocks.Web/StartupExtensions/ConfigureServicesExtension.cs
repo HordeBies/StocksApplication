@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Stocks.Core.Domain.RepositoryContracts;
 using Stocks.Core.ServiceContracts.FinnhubService;
 using Stocks.Core.ServiceContracts.StocksService;
@@ -16,6 +17,7 @@ namespace Stocks.Web.StartupExtensions
         public static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddControllersWithViews();
+            services.AddRazorPages();
             services.AddHttpClient();
             services.Configure<TradingOptions>(configuration.GetSection("TradingOptions"));
 
@@ -38,6 +40,16 @@ namespace Stocks.Web.StartupExtensions
             {
                 options.UseSqlServer(configuration.GetConnectionString("StockMarketConnection"));
             });
+
+            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<StockMarketDbContext>();
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = $"/Identity/Account/Login";
+                options.LogoutPath = $"/Identity/Account/Logout";
+                options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+            });
+
 
             services.AddHttpLogging(options =>
             {

@@ -1,6 +1,9 @@
 using Serilog;
 using Stocks.Web.Middlewares;
 using Stocks.Web.StartupExtensions;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Stocks.Infrastructure.DatabaseContext;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,16 +26,30 @@ else
 {
     app.UseExceptionHandler("/Error");
     app.UseExceptionHandlingMiddleware();
+    app.UseHsts();
 }
-app.UseHsts();
+
 app.UseHttpsRedirection();
 app.UseSerilogRequestLogging();
 app.UseHttpLogging();
 app.UseStaticFiles();
 app.UseRouting();
-// TODO: Auth
-app.MapControllers();
+app.UseAuthentication();
+app.UseAuthorization();
+await SeedDatabase();
+app.MapRazorPages();
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{area:exists=User}/{controller=Home}/{action=Index}/{id?}"
+);
 
 app.Run();
 
+async Task SeedDatabase()
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        // TODO: Initialize db server with default roles and admin user
+    }
+}
 public partial class Program { }

@@ -1,0 +1,26 @@
+﻿<div>
+        <h1 class="text-center display-2 text-light">
+            Welcome to Bies Stocks
+        </h1>
+    <div class="home-container row">
+        <div class="home-content mt-5 h2 font-weight-light ">
+            <h1 class="display-4 mb-5 home-header">
+                The best choices... begin with practice.
+            </h1>
+            <p>
+                Experience the thrill of the stock market by utilizing fake money
+                to purchase real stocks and buy or sell shares.
+            </p>
+            <p>Before you start, you must first register.</p>
+            <div class="home-buttons-wrapper">
+                <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-success">Register</a>
+                <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-primary">Login</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Header
+    {
+    <link rel="stylesheet" href="~/css/home.css" />
+}

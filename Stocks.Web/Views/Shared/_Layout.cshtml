@@ -1,64 +1,82 @@
 ﻿<!DOCTYPE html>
-
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="~/StyleSheet.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bies Stocks</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Stocks.Web.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+    <link rel="stylesheet" href="//cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    @await RenderSectionAsync("Header", required: false)
 </head>
 <body>
-    <div class="container">
-        <div class="page-content">
-            <div class="margin-bottom">
-                <div class="flex" id="top-bar-div">
-                    <div class="flex-1" id="app-title-div">
-                        <h1 class="app-title">
-                            <i class="fa-solid fa-money-bill-trend-up"></i>
-                            Stocks
-                        </h1>
-                    </div>
-
-                    <div class="flex-1 pr" id="search-box-div">
-                        <input type="search" class="search-text" placeholder="Search Stocks" name="SearchText" />
-                        <i class="fa-solid fa-gear"></i>
-                        <button class="button button-blue-back ml login-button">Login</button>
-                    </div>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-primary bg-primary box-shadow pb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand ml-3 text-white" asp-area="" asp-controller="Home" asp-action="Index"><span class="fw-bold">Bies</span> <i class="bi bi-graph-up-arrow"></i> Stocks</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-area="User" asp-controller="Home" asp-action="Index">Guest Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-area="User" asp-controller="Home" asp-action="User">User Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-area="User" asp-controller="Home" asp-action="Beginner">Beginner</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-area="User" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                        @if (User.IsInRole(Role.Admin))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Content Management
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="Index">Users</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register">Create User</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+                    <partial name="_LoginPartial" />
                 </div>
             </div>
-            <div class="navbar mb">
-                <ul>
-                    @if (ViewBag.CurrentUrl == "~/Explore")
-                    {
-                        <li><a asp-controller="Stocks" asp-action="Explore" class="nav-active">Explore</a></li>
-                    }
-                    else
-                    {
-                        <li><a asp-controller="Stocks" asp-action="Explore">Explore</a></li>
-                    }
-                    @if (ViewBag.CurrentURL == "~/Trade/Index")
-                    {
-                        <li><a href="" class="nav-active">Trade</a></li>
-                    }
-                    else
-                    {
-                        <li><a href="">Trade</a></li>
-                    }
-                    @if (ViewBag.CurrentURL == "~/Trade/Orders")
-                    {
-                        <li><a asp-controller="Trade" asp-action="Orders" class="nav-active">Orders</a></li>
-                    }
-                    else
-                    {
-                        <li><a asp-controller="Trade" asp-action="Orders">Orders</a></li>
-                    }
-                </ul>
-            </div>
+        </nav>
+    </header>
+    <div id="bg">
+    <div class="container">
+        <main role="main" class="pb-3">
+            <partial name="_Notification" />
             @RenderBody()
-        </div>
+        </main>
     </div>
-    @await RenderSectionAsync("Scripts",required: false)
+    </div>
+
+    <footer class="footer bg-dark text-muted">
+        <div class="container">
+            Made with <i class="bi bi-heart-fill"></i> by Bies
+        </div>
+    </footer>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.tiny.cloud/1/ggh71fgdznpyz39i1dumxgnnpuqyl7t52hz9efehy0w1qld4/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="//cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

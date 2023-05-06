@@ -2,7 +2,7 @@
 
 namespace Stocks.Web.Controllers
 {
-    [Route("[controller]")]
+    [Route("/[controller]")]
     public class ApiController : Controller
     {
         private readonly IConfiguration configuration;

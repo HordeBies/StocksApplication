@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Stocks.Core.Domain.Entities;
 
 namespace Stocks.Infrastructure.DatabaseContext
 {
-    public class StockMarketDbContext : DbContext
+    public class StockMarketDbContext : IdentityDbContext
     {
         public StockMarketDbContext(DbContextOptions<StockMarketDbContext> options) : base(options)
         {

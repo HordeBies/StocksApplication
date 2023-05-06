@@ -1,0 +1,97 @@
+﻿<div id="home">
+    <div class="home-content m-0 text-justify w-100">
+        <h1 class="text-center mb-5">
+            Hi {userName}, and welcome to TR's No. 1 trading playground!
+        </h1>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <a class="card-a" href="#">
+                        <div class="card bg-transparent home-card mt-3">
+                            <img src="~/images/explore.png" style="width:7em;" class="col-logo" />
+                            <div class="card-body d-block">
+                                <h2 class="card-title text-center fw-bold">
+                                    Explore
+                                </h2>
+                                <div class="card-text">
+                                    Discover new investment opportunities by exploring a wide range of stocks available.
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3">
+                    <a class="card-a" href="#">
+                        <div class="card bg-transparent home-card mt-3">
+                            <img src="~/images/trade.png" style="width:7em;" class="col-logo" />
+                            <div class="card-body d-block">
+                                <h2 class="card-title text-center fw-bold">
+                                    Trade
+                                </h2>
+                                <div class="card-text">
+                                    Buy stocks by searching for a specific symbol, or view our
+                                    recommended stocks. You are initially given a total of
+                                    10,000 dollars.
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3">
+                    <a class="card-a" href="#">
+                        <div class="card bg-transparent home-card mt-3">
+                            <img src="~/images/investment.png" style="width:7em;" class="col-logo" />
+                            <div class="card-body d-block">
+                                <h2 class="card-title text-center fw-bold">
+                                    Data
+                                </h2>
+                                <div class="card-text">
+                                    View your personal data, current holdings and statistics.
+                                    With this information you can make informed decisions on
+                                    what stocks to buy and sell.
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3">
+                    <a class="card-a" href="#">
+                        <div class="card bg-transparent home-card mt-3">
+                            <img src="~/images/instructions.png" style="width:7em;" class="col-logo" />
+                            <div class="card-body d-block">
+                                <h2 class="card-title text-center fw-bold">
+                                    Instructions
+                                </h2>
+                                <div class="card-text">
+                                    New to the stocks world? Want to get a better understanding
+                                    of how to utilize the Fantasy Trade App? This is the place
+                                    for you.
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Header
+    {
+    <link rel="stylesheet" href="~/css/home.css" />
+    <style>
+        .card {
+            border-radius: 4px;
+            background: #fff;
+            box-shadow: 0 6px 10px rgba(0,0,0,.08), 0 0 6px rgba(0,0,0,.05);
+            transition: .3s transform cubic-bezier(.155,1.105,.295,1.12),.3s box-shadow,.3s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
+            padding: 0;
+            cursor: pointer;
+        }
+
+            .card:hover {
+                transform: scale(1.05);
+                box-shadow: 0 10px 20px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
+            }
+    </style>
+    }

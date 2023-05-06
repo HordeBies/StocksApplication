@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Stocks.Core.DTO;
-using Stocks.Web.Controllers;
-using Stocks.Web.Models;
+using Stocks.Web.Areas.User.Controllers;
+using Stocks.Web.Areas.User.Models;
 
 namespace Stocks.Web.Filters.ActionFilters
 {

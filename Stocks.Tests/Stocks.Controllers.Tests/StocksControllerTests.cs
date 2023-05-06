@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Stocks.Core.ServiceContracts.FinnhubService;
+using Stocks.Web.Areas.User.Models;
 using Stocks.Web.Configurations;
-using Stocks.Web.Controllers;
-using Stocks.Web.Models;
+using Stocks.Web.Areas.User.Controllers;
 
 namespace Stocks.Tests.Controllers
 {
