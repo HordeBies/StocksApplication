@@ -1,0 +1,78 @@
+﻿@model UserStockVM
+@{
+    ViewBag.holdingStyleColor = Model.PercentChange > 0 ? "text-success" : "text-danger";
+}
+<div class="selected-holding card mt-4">
+    <div class="card-head">
+        <h3>
+            @Model.StockName : @Model.StockSymbol
+        </h3>
+        <div class="card-buttons">
+            <button onclick="orderDetails('@Model.StockSymbol')" class="btn btn-primary mx-4">Order History</button>
+            <a asp-controller="Trade" asp-action="Index" asp-route-id="@Model.StockSymbol" class="btn btn-primary">Trade</a>
+        </div>
+    </div>
+    <h6 class="ms-2">Last Order: @Model.LastOrder.ToString("F")</h6>
+    <hr />
+    <div class="card-body">
+        <div class="Holding Value:">
+            <strong>Shares Total Value:</strong>
+            <p class={holdingStyleColor}>
+                @Model.TotalValue.ToString("c")
+            </p>
+        </div>
+        <div class="shares">
+            <strong>Number Of Shares:</strong>
+            <p>@Model.SharesOwned</p>
+        </div>
+        <div class="last-price">
+            <strong>Current Stock Value:</strong>
+            <p class="@ViewBag.holdingStyleColor">@Model.CurrentPrice.ToString("c")</p>
+        </div>
+        <div class="percent-change">
+            <strong>Percent Change:</strong>
+            <p class="@ViewBag.holdingStyleColor">
+                @(Model.PercentChange >= 0 ? "+" : "")@(Model.PercentChange)%
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 10px;
+    }
+
+    .card-body {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .card-body > div {
+            padding: 10px;
+            width: 100%;
+        }
+
+            .card-body > div:nth-child(-n + 3) {
+                border-right: 2px solid rgba(0, 0, 0, 0.1);
+            }
+
+    hr {
+        margin: 0 !important;
+    }
+
+    .recommendation-header::before {
+        clear: both;
+        content: '';
+        display: block;
+        width: 50px;
+        height: 3px;
+        margin: 20px auto;
+        background: #007bff;
+    }
+
+</style>

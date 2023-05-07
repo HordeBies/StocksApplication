@@ -20,11 +20,13 @@ namespace Stocks.Infrastructure.Repositories
             if(userStock != null)
             {
                 userStock.Amount += (int)buyOrder.Quantity;
+                userStock.Cost += buyOrder.Quantity * buyOrder.Price;
+                userStock.LastChange = DateTime.UtcNow;
                 db.UserStocks.Update(userStock);
             }
             else
             {
-                db.UserStocks.Add(new UserStock() { ApplicationUserId = buyOrder.UserId, StockId = buyOrder.StockSymbol, Amount = (int)buyOrder.Quantity });
+                db.UserStocks.Add(new UserStock() { ApplicationUserId = buyOrder.UserId, StockId = buyOrder.StockSymbol, Amount = (int)buyOrder.Quantity, LastChange = DateTime.UtcNow, Cost = buyOrder.Quantity*buyOrder.Price });
             }
             // TODO: Add User Repository to handle this and call it in stock service
             var user = db.Users.Where(r => r.Id == buyOrder.UserId).FirstOrDefault();
@@ -42,11 +44,13 @@ namespace Stocks.Infrastructure.Repositories
             if (userStock != null)
             {
                 userStock.Amount -= (int)sellOrder.Quantity;
+                userStock.Cost -= sellOrder.Price * sellOrder.Quantity;
+                userStock.LastChange = DateTime.UtcNow;
                 db.UserStocks.Update(userStock);
             }
             else
             {
-                db.UserStocks.Add(new UserStock() { ApplicationUserId = sellOrder.UserId, StockId = sellOrder.StockSymbol, Amount = (int)sellOrder.Quantity });
+                db.UserStocks.Add(new UserStock() { ApplicationUserId = sellOrder.UserId, StockId = sellOrder.StockSymbol, Amount = (int)sellOrder.Quantity, Cost = sellOrder.Price*sellOrder.Quantity, LastChange = DateTime.UtcNow });
             }
             // TODO: Add User Repository to handle this and call it in stock service
             var user = db.Users.Where(r => r.Id == sellOrder.UserId).FirstOrDefault();

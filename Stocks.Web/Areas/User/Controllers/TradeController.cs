@@ -83,17 +83,17 @@ namespace Stocks.Web.Areas.User.Controllers
             return RedirectToAction(nameof(Index), new { id = orderRequest.StockSymbol });
         }
         [HttpGet]
-        public async Task<IActionResult> Orders()
+        public async Task<IActionResult> OrderHistory(string id)
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            var buyOrders = await stocksBuyOrdersService.GetBuyOrders(userId);
-            var sellOrders = await stocksSellOrdersService.GetSellOrders(userId);
-
-            var orders = new Orders() { BuyOrders = buyOrders, SellOrders = sellOrders };
-
-            return View(orders);
+            var model = new OrderHistoryVM()
+            {
+                BuyOrders = (await stocksBuyOrdersService.GetBuyOrders(userId)).Where(r => r.StockSymbol == id),
+                SellOrders = (await stocksSellOrdersService.GetSellOrders(userId)).Where(r => r.StockSymbol == id)
+            };
+            return View(model);
         }
 
         [HttpGet]

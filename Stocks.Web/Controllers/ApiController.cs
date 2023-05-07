@@ -51,5 +51,12 @@ namespace Stocks.Web.Controllers
         {
             return ViewComponent("SelectedStock", new { stockSymbol });
         }
+
+        [HttpGet]
+        [Route("finnhub/stock/popular")]
+        public async Task<IActionResult> Top25PopularStock()
+        {
+            return ViewComponent("PopularStocks");
+        }
     }
 }

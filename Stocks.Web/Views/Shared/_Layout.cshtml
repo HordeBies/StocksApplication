@@ -28,12 +28,18 @@
                         <li class="nav-item">
                             <a class="nav-link text-white" asp-area="User" asp-controller="Home" asp-action="Beginner">Beginner</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="User" asp-controller="Stocks" asp-action="Explore">Explore</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="User" asp-controller="Trade" asp-action="Index">Trade</a>
-                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="User" asp-controller="Stocks" asp-action="Explore">Explore</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="User" asp-controller="Trade" asp-action="Index">Trade</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="User" asp-controller="Portfolio" asp-action="Index">Portfolio</a>
+                            </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link text-white" asp-area="User" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
@@ -59,12 +65,12 @@
         </nav>
     </header>
     <div id="bg">
-    <div class="container">
-        <main role="main" class="pb-3">
-            <partial name="_Notification" />
-            @RenderBody()
-        </main>
-    </div>
+        <div class="container">
+            <main role="main" class="pb-3">
+                <partial name="_Notification" />
+                @RenderBody()
+            </main>
+        </div>
     </div>
 
     <footer class="footer bg-dark text-muted">
