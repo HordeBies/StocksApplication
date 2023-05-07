@@ -1,7 +1,8 @@
-﻿<div id="home">
+﻿@inject Microsoft.AspNetCore.Identity.UserManager<Stocks.Core.Domain.Entities.ApplicationUser> userManager
+<div id="home">
     <div class="home-content m-0 text-justify w-100">
         <h1 class="text-center mb-5">
-            Hi {userName}, and welcome to TR's No. 1 trading playground!
+            Hi @((await userManager.GetUserAsync(User))?.FullName), and welcome to TR's No. 1 trading playground!
         </h1>
         <div class="container">
             <div class="row">

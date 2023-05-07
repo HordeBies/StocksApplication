@@ -1,9 +1,7 @@
 using Serilog;
+using Stocks.Core.Domain.RepositoryContracts;
 using Stocks.Web.Middlewares;
 using Stocks.Web.StartupExtensions;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Stocks.Infrastructure.DatabaseContext;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +34,7 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseSession();
 await SeedDatabase();
 app.MapRazorPages();
 app.MapControllerRoute(
@@ -49,7 +48,9 @@ async Task SeedDatabase()
 {
     using (var scope = app.Services.CreateScope())
     {
-        // TODO: Initialize db server with default roles and admin user
+        var dbInitializer = scope.ServiceProvider.GetRequiredService<IStockMarketDbInitializer>();
+        // TODO: Before deploying enable this line
+        //await dbInitializer.Initialize();
     }
 }
 public partial class Program { }

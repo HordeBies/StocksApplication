@@ -8,17 +8,16 @@ namespace Stocks.Web.Areas.User.Controllers
     {
         public IActionResult Index()
         {
+            if(User.Identity.IsAuthenticated)
+                return View("UserHome");
+
             return View("GuestHome");
         }
         public IActionResult Beginner()
         {
             return View();
         }
-        [ActionName("User")]
-        public IActionResult UserHome()
-        {
-            return View("UserHome");
-        }
+
         public IActionResult Privacy()
         {
             return View();

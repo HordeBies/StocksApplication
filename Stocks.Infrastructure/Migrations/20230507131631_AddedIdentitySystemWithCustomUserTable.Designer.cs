@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Stocks.Infrastructure.DatabaseContext;
 
@@ -11,9 +12,11 @@ using Stocks.Infrastructure.DatabaseContext;
 namespace Stocks.Infrastructure.Migrations
 {
     [DbContext(typeof(StockMarketDbContext))]
-    partial class StockMarketDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230507131631_AddedIdentitySystemWithCustomUserTable")]
+    partial class AddedIdentitySystemWithCustomUserTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -102,10 +105,12 @@ namespace Stocks.Infrastructure.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -142,10 +147,12 @@ namespace Stocks.Infrastructure.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -178,10 +185,6 @@ namespace Stocks.Infrastructure.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -254,13 +257,7 @@ namespace Stocks.Infrastructure.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("BuyOrderID");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("BuyOrders", (string)null);
                 });
@@ -290,33 +287,9 @@ namespace Stocks.Infrastructure.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("SellOrderID");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("SellOrders", (string)null);
-                });
-
-            modelBuilder.Entity("Stocks.Core.Domain.Entities.UserStock", b =>
-                {
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("StockId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("Amount")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
-
-                    b.HasKey("ApplicationUserId", "StockId");
-
-                    b.ToTable("UserStocks");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -368,46 +341,6 @@ namespace Stocks.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Stocks.Core.Domain.Entities.BuyOrder", b =>
-                {
-                    b.HasOne("Stocks.Core.Domain.Entities.ApplicationUser", "User")
-                        .WithMany("BuyOrders")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Stocks.Core.Domain.Entities.SellOrder", b =>
-                {
-                    b.HasOne("Stocks.Core.Domain.Entities.ApplicationUser", "User")
-                        .WithMany("SellOrders")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Stocks.Core.Domain.Entities.UserStock", b =>
-                {
-                    b.HasOne("Stocks.Core.Domain.Entities.ApplicationUser", null)
-                        .WithMany("Stocks")
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Stocks.Core.Domain.Entities.ApplicationUser", b =>
-                {
-                    b.Navigation("BuyOrders");
-
-                    b.Navigation("SellOrders");
-
-                    b.Navigation("Stocks");
                 });
 #pragma warning restore 612, 618
         }

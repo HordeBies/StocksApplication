@@ -12,7 +12,7 @@ namespace Stocks.Core.Services.StocksService
         {
             this.stocksRepository = stocksRepository;
         }
-        public async Task<SellOrderResponse> CreateSellOrder(SellOrderRequest? sellOrderRequest)
+        public async Task<SellOrderResponse> CreateSellOrder(SellOrderRequest? sellOrderRequest, string userId)
         {
             if (sellOrderRequest == null) throw new ArgumentNullException(nameof(sellOrderRequest));
 
@@ -20,14 +20,15 @@ namespace Stocks.Core.Services.StocksService
 
             var sellOrder = sellOrderRequest.ToSellOrder();
             sellOrder.SellOrderID = Guid.NewGuid();
+            sellOrder.UserId = userId;
 
             sellOrder = await stocksRepository.CreateSellOrder(sellOrder);
 
             return sellOrder.ToSellOrderResponse();
         }
-        public async Task<List<SellOrderResponse>> GetSellOrders()
+        public async Task<List<SellOrderResponse>> GetSellOrders(string userId)
         {
-            return (await stocksRepository.GetSellOrders()).Select(i => i.ToSellOrderResponse()).ToList();
+            return (await stocksRepository.GetSellOrders(userId)).Select(i => i.ToSellOrderResponse()).ToList();
         }
     }
 }

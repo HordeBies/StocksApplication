@@ -22,12 +22,14 @@ namespace Stocks.Core.Domain.RepositoryContracts
         /// Retrieves a list of all buy orders for stocks.
         /// </summary>
         /// <returns>A list of all buy orders for stocks.</returns>
-        public Task<List<BuyOrder>> GetBuyOrders();
+        public Task<List<BuyOrder>> GetBuyOrders(string userId);
 
         /// <summary>
         /// Retrieves a list of all sell orders for stocks.
         /// </summary>
         /// <returns>A list of all sell orders for stocks.</returns>
-        public Task<List<SellOrder>> GetSellOrders();
+        public Task<List<SellOrder>> GetSellOrders(string userId);
+        public Task<List<UserStock>> GetUserStocks(string userId);
+        public Task<UserStock?> GetUserStock(string userId, string stockSymbol);
     }
 }

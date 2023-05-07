@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Stocks.Core.ServiceContracts.FinnhubService;
 using Stocks.Web.Areas.User.Models;
@@ -7,6 +8,7 @@ using Stocks.Web.Configurations;
 namespace Stocks.Web.Areas.User.Controllers
 {
     [Area("User")]
+    [Authorize]
     public class StocksController : Controller
     {
         private readonly IFinnhubStocksService finnhubStocksService;

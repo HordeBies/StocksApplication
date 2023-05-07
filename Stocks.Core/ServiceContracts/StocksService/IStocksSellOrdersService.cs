@@ -9,12 +9,12 @@ namespace Stocks.Core.ServiceContracts.StocksService
         /// </summary>
         /// <param name="sellOrderRequest">The sell order request to create the sell order.</param>
         /// <returns>The sell order response created by the system.</returns>
-        public Task<SellOrderResponse> CreateSellOrder(SellOrderRequest? sellOrderRequest);
+        public Task<SellOrderResponse> CreateSellOrder(SellOrderRequest? sellOrderRequest, string userId);
 
         /// <summary>
         /// Returns a list of sell order responses that includes all sell orders created by the system.
         /// </summary>
         /// <returns>A list of sell order responses that includes all sell orders created by the system.</returns>
-        public Task<List<SellOrderResponse>> GetSellOrders();
+        public Task<List<SellOrderResponse>> GetSellOrders(string userId);
     }
 }

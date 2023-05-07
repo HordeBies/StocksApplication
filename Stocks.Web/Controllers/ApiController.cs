@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Stocks.Core.ServiceContracts.FinnhubService;
 using Stocks.Web.Areas.User.Models;
 
@@ -17,6 +18,7 @@ namespace Stocks.Web.Controllers
         }
         [HttpGet]
         [Route("finnhub/token")]
+        [Authorize]
         public IActionResult GetFinnhubToken() //TODO: use authentication to prevent 3rd party to acces this endpoint
         {
             if (configuration["FinnhubToken"] == null)

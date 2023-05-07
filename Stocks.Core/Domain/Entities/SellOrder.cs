@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Stocks.Core.Domain.Entities
 {
@@ -17,5 +18,8 @@ namespace Stocks.Core.Domain.Entities
         public uint Quantity { get; set; }
         [Range(1, 10000)]
         public double Price { get; set; }
+        public string UserId { get; set; }
+        [ForeignKey(nameof(UserId))]
+        public ApplicationUser User { get; set; }
     }
 }

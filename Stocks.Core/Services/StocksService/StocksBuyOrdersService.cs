@@ -12,7 +12,7 @@ namespace Stocks.Core.Services.StocksService
         {
             this.stocksRepository = stocksRepository;
         }
-        public async Task<BuyOrderResponse> CreateBuyOrder(BuyOrderRequest? buyOrderRequest)
+        public async Task<BuyOrderResponse> CreateBuyOrder(BuyOrderRequest? buyOrderRequest, string userId)
         {
             if (buyOrderRequest == null) throw new ArgumentNullException(nameof(buyOrderRequest));
 
@@ -20,14 +20,15 @@ namespace Stocks.Core.Services.StocksService
 
             var buyOrder = buyOrderRequest.ToBuyOrder();
             buyOrder.BuyOrderID = Guid.NewGuid();
+            buyOrder.UserId = userId;
 
             buyOrder = await stocksRepository.CreateBuyOrder(buyOrder);
 
             return buyOrder.ToBuyOrderResponse();
         }
-        public async Task<List<BuyOrderResponse>> GetBuyOrders()
+        public async Task<List<BuyOrderResponse>> GetBuyOrders(string userId)
         {
-            return (await stocksRepository.GetBuyOrders()).Select(i => i.ToBuyOrderResponse()).ToList();
+            return (await stocksRepository.GetBuyOrders(userId)).Select(i => i.ToBuyOrderResponse()).ToList();
         }
     }
 }
