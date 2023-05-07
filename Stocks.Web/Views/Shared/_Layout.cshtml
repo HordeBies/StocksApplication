@@ -35,6 +35,12 @@
                             <a class="nav-link text-white" asp-area="User" asp-controller="Home" asp-action="Beginner">Beginner</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link text-white" asp-area="User" asp-controller="Stocks" asp-action="Explore">Explore</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-area="User" asp-controller="Trade" asp-action="Index">Trade</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link text-white" asp-area="User" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         @if (User.IsInRole(Role.Admin))

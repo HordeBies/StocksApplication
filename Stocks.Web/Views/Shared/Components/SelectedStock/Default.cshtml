@@ -1,10 +1,18 @@
 ﻿@model Dictionary<string,object>
+<div class="card shadow border-0 my-4" id="stock-details" style="width: 18rem;">
+    <div class="card-img-top text-center">
+        <img class="mt-3" src="@Model["logo"]" style="height:10rem; width: 10rem;" />
+    </div>
+    <div class="card-body">
 
-<img src="@Model["logo"]" width="200" />
-<h1>@Model["name"] (@Model["ticker"])</h1>
-<span class="pill">@Model["finnhubIndustry"]</span>
+        <h3 class="card-title">@Model["name"] (@Model["ticker"])</h3>
+        <h5 class="badge text-bg-info">@Model["finnhubIndustry"]</h5>
 
-<h3 class="mb">Exchange: <span class="pill">@Model["exchange"]</span></h3>
+        <h4 class="mb-1 card-text">
+            Exchange: <span title="@Model["exchange"]" class="badge text-bg-light" style="display: inline-block;width: 15rem;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;">@Model["exchange"]</span>
+        </h4>
 
-<h1 class="stock-price"><span class="text-grey">$</span>@Model["price"]</h1>
-<a class="button-link button-blue-back" id="trade-button" href="~/Trade/Index/@Model["ticker"]">Trade Now</a>
+        <h2 class=""><span class="text-muted">$</span>@Model["price"]</h2>
+        <a class="btn btn-primary" id="trade-button" asp-area="User" asp-controller="Trade" asp-action="Index" asp-route-id="@Model["ticker"]">Trade Now</a>
+    </div>
+</div>

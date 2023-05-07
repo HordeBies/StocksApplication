@@ -1,69 +1,142 @@
 ﻿@model StockTrade
 @{
-    ViewBag.Title = "Trade";
-    ViewBag.CurrentURL = "~/Trade/Index";
+    ViewBag.holdingStyleColor = Model.ChangePercent > 0 ? "text-success" : "text-danger";
+    ViewBag.SelectedStock = Model.StockSymbol;
 }
 
-<div class="text-grey ml">
-    <span>Stocks</span>
-    <i class="fa-solid fa-caret-right"></i>
-    <span>@Model.StockName</span>
-</div>
-
-<form method="post">
-    <div class="box trading-panel">
-        <div class="flex trading-panel-flex">
-            <div id="stock-price-panel">
-                <div class="stock">
-                    <h1 class="stock-title">@Model.StockName (@Model.StockSymbol)</h1>
-                    <h2 class="stock-price"><small class="text-grey">$</small><span class="price" id="StockPrice">@Model.Price.ToString("N")</span></h2>
+<section class="trade-container">
+    <div class="text-center mt-3" id="goup">
+        <h2>Trading Page</h2>
+        <h6>
+            Search stock symbols to trade. For example, type GM for General Motors.
+        </h6>
+        <hr />
+    </div>
+    <div class="container">
+        <div>
+            <form method="get" id="searchStockForm" asp-route-id="@ViewBag.SelectedStock" autocomplete="off" class="form-inline row mt-3 justify-content-center selected-holding">
+                <div class="col-3 px-1 autocomplete">
+                    <input id="searchStockInput" type="text" value="@ViewBag.SelectedStock" autoFocus onChange="" class="form-control " placeholder="Enter stock symbol" />
                 </div>
-            </div>
-            <div id="new-order-panel">
-                <div class="flex flex-direction-vertical">
-                    <h3 class="text-grey mb">New Order</h3>
-                    <label for="Quantity" class="mt">Quantity:</label>
-                    <div class="w-25">
-                        <input type="number" asp-for=Quantity id="Quantity" min="1" max="100000" placeholder="Quantity" required="required" class="form-input mb" autofocus="autofocus" value="@Model.Quantity" />
-                        <span asp-validation-for="Quantity" class="text-red"></span>
+                <div class="col-1 px-1">
+                    <button id="searchStockButton" onclick="return validateStockSearch()" type="submit" class="btn btn-primary w-100"> Submit </button>
+                </div>
+                @*            <h6 class="w-100 text-center text-success" style="display: @(Model.StockSymbol == null ? "none" : "block" );">
+                @Model.StockName
+                </h6>*@
+            </form>
+        </div>
+        @if (Model.StockSymbol != null)
+        {
+
+            <div class="selected-holding card my-4">
+                <div class="card-head">
+                    <h2>
+                        @Model.StockName: @Model.StockSymbol
+                    </h2>
+                    @*                <div class="card-buttons">
+                <BuyModal handleBuyShares={handleBuyShares}
+                selectedHolding={selectedHolding}
+                shares={shares} />
+                <SellModal handleSellShares={handleSellShares}
+                selectedHolding={selectedHolding}
+                shares={shares} />
+                </div>*@
+                </div>
+                <hr />
+                <div class="card-body">
+                    <div class="price">
+                        <strong>Current Price</strong>
+                        <p class="mb-0 @ViewBag.holdingStyleColor">
+                            @Model.CurrentPrice.ToString("c")
+                        </p>
+                        <small class="@ViewBag.holdingStyleColor">
+                            Previous Closed: @Model.PreviousClosedPrice.ToString("c")
+                        </small>
+                    </div>
+                    <div class="percent">
+                        <strong>Percent Change</strong>
+                        <p class="@ViewBag.holdingStyleColor">
+                            @(Model.ChangePercent >= 0 ? "+" : "")@(Model.ChangePercent)%
+                        </p>
+                    </div>
+                    <div class="change">
+                        <strong>Daily Gain/Loss</strong>
+                        <p class="@ViewBag.holdingStyleColor">
+                            @Model.DailyChange.ToString("+$0.##;-$0.##")
+                        </p>
+                    </div>
+                    <div class="shares-held">
+                        <strong>Shares Held</strong>
+                        <p>@Model.SharesOwned</p>
                     </div>
                 </div>
-                <div class="button-panel">
-
-                    <button type="submit" formaction="~/Trade/SellOrder" class="button button-red-back trading-button sell-button">
-                        <i class="fa-solid fa-arrow-down"></i>
-                        <span>Sell</span>
-                    </button>
-
-                    <button type="submit" formaction="~/Trade/BuyOrder" class="button button-green-back trading-button buy-button">
-                        <i class="fa-solid fa-arrow-up"></i>
-                        <span>Buy</span>
-                    </button>
-
-                    @if (ViewBag.Errors != null)
-                    {
-                        <div class="text-red mt">
-                            <ul>
-                                @foreach (string error in ViewBag.Errors)
-                                {
-                                    <li class="ml">@error</li>
-                                }
-                            </ul>
-                        </div>
-                    }
-                </div>
             </div>
-        </div>
+            <div class="text-center mt-3" id="goup">
+                <hr class="pt-5" />
+                <h3>Historical Data for @Model.StockSymbol</h3>
+                <h6>
+                    CandleStick chart for the past YEAR.
+                </h6>
+            </div>
+            <div className="chart">
+                <iframe width="100%" frameborder="0" height="500" src="https://widget.finnhub.io/widgets/stocks/chart?symbol=@(Model.StockSymbol)&watermarkColor=%231db954&backgroundColor=%23222222&textColor=white">
+                </iframe>
+            </div>
+        }
     </div>
+    <vc:popular-stocks></vc:popular-stocks>
+</section>
 
-    <input type="hidden" name="StockSymbol" id="StockSymbol" value="@Model.StockSymbol" />
-    <input type="hidden" name="StockName" id="StockName" value="@Model.StockName" />
-    <input type="hidden" name="Price" id="price" value="@Model.Price" />
+<script>
+    var stocks;
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetStocksNamesList", "Api")',
+            dataType: 'json',
+            success: function (result) {
+                stocks = result
+                autocomplete(document.getElementById("searchStockInput"), stocks);
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+        $("#searchStockInput").keyup(function (event) {
+            if (event.keyCode === 13) {
+                $("#searchStockButton").click();
+            }
+        });
+    });
+    function validateStockSearch() {
+        var stockSymbol = $("#searchStockInput").val();
+        if (stockSymbol == "") {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please enter a stock symbol!',
+            })
+            return false;
+        }
+        if (!stocks.includes(stockSymbol)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please enter a valid stock symbol!',
+            })
+            return false;
+        }
+        var form = document.getElementById("searchStockForm");
+        form.action = "/User/Trade/Index/" + stockSymbol;
+        return true;
+    }
+</script>
 
-</form>
-
-@section Scripts {
-    <script src="~/Scripts/live-stock-updates.js"></script>
-    <script asp-fallback-test="window.jQuery.validate" asp-fallback-src="~/scripts/jquery.validate.min.js" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js" integrity="sha512-rstIgDs0xPgmG6RX1Aba4KV5cWJbAMcvRCVmglpam9SoHZiUCyQVDdH2LPlxoHtrv17XWblE/V/PP+Tr04hbtA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script asp-fallback-test="window.jQuery.validate.unobtrusive" asp-fallback-src="~/scripts/jquery.validate.unobtrusive.min.js" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js" integrity="sha512-xq+Vm8jC94ynOikewaQXMEkJIOBp7iArs3IhFWSWdRT3Pq8wFz46p+ZDFAR7kHnSFf+zUv52B3prRYnbDRdgog==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+@section Header{
+    <link rel="stylesheet" href="~/css/trade.css" />
+    <link rel="stylesheet" href="~/css/autocomplete.css" />
+}
+@section Scripts{
+    <script src="~/js/autocomplete.js"></script>
 }

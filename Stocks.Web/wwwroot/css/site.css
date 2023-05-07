@@ -39,3 +39,7 @@ body {
         text-decoration: none; /* no underline */
         all: unset;
     }
+
+div.dataTables_length select {
+    background-color: #303030 !important;
+}

@@ -1,56 +1,69 @@
-﻿@model IEnumerable<Stock>
-
-@{
-    ViewBag.Title = "Explore";
-    ViewBag.CurrentUrl = "~/Explore";
-}
-
-<div class="text-grey ml">
-    <span>Stocks</span>
-    <i class="fa-solid fa-caret-right"></i>
-    <span>Explore</span>
-</div>
-
-<div class="flex stocks-list">
-    <div class="flex-1" id="stocks-list">
-        <div class="box">
-            <div class="flex">
-                <div class="flex-1">
-                    <h4 class="text-grey mb">Stocks</h4>
-                </div>
-                <div class="flex-1 text-right">
-                    @if (ViewBag.ShowAll)
-                    {
-                        <a href="~/Stocks/Explore?showAll=false" class="mr">Show top 25 stocks</a>
-                    }
-                    else
-                    {
-                        <a href="~/Stocks/Explore?showAll=true" class="mr">Show all stocks</a>
-                    }
+﻿<div class="row">
+    <div class="col-8 p-0 card shadow border-0 my-4">
+        <div class="card-header bg-primary bg-gradient ml-0 py-3">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h2 class="text-white pt-2">Explore</h2>
                 </div>
             </div>
-
-            <ul class="list">
-                @foreach (Stock stock in Model)
-                {
-                    <li>
-                        <a href="~/Stocks/Explore/@stock.StockSymbol?showAll=@ViewBag.ShowAll">
-                            <h4>@stock.StockName</h4>
-                            <div class="text-grey">(@stock.StockSymbol)</div>
-                        </a>
-                    </li>
-                }
-            </ul>
-            @if (Model.Count() == 0)
-            {
-                <div class="mt text-blue">No stocks</div>
-            }
+        </div>
+        <div class="card-body p-4">
+            <table id="tblData" class="table table-bordered table-striped w-100">
+                <thead>
+                    <tr>
+                        <th>Stock Symbol</th>
+                        <th>Company Name</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+            </table>
         </div>
     </div>
-    <div class="flex-1" id="stock-details">
-        @if (ViewBag.Stock != null)
-        {
-            <vc:selected-stock stock-symbol="@ViewBag.Stock"></vc:selected-stock>
-        }
+    <div id="selected-stock-container" class="col-4">
     </div>
 </div>
+
+@section Scripts{
+    <script>
+        var dataTable;
+        $(document).ready(function () {
+            loadDataTable();
+        })
+        function loadDataTable() {
+            dataTable = $('#tblData').DataTable({
+                "ajax": { url: "@Url.Action("GetAllStocks", "Api")" },
+                columns: [
+                    { data: 'stockSymbol', "width": "20%" },
+                    { data: 'stockName', "width": "45%" },
+                    {
+                        data: 'stockSymbol',
+                        "render": function (data) {
+                            return `
+                                                <div class="w-100 pt-2 btn-group" role="group">
+                                                    <button onClick="showStockDetails('${data}')" class="btn btn-primary mx-2" style="cursor:pointer">
+                                                                <i class="bi bi-info-circle me-2"></i> Details
+                                                            </button>
+                                                                    <a class="btn btn-primary mx-2" style="cursor:pointer" href="@(Url.Action("Index","Trade"))/${data}">
+                                                                    <i class="bi bi-arrow-down-up me-2"></i> Trade
+                                                    </a>
+                                                </div>
+                                            `;
+                        },
+                        "width": "35%"
+                    }
+                ]
+            });
+        }
+        function showStockDetails(stockSymbol) {
+            console.log(stockSymbol);
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("StockDetailVC","Api")",
+                data: { stockSymbol: stockSymbol },
+                success: function (result) {
+                    $("#selected-stock-container").html(result);
+                }
+            });
+        }
+    </script>
+}

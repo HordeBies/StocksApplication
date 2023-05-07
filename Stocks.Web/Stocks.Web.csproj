@@ -48,4 +48,8 @@
 	<ItemGroup>
 		<InternalsVisibleTo Include="Stocks.Integration.Tests" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="wwwroot\lib\lightweight-charts\lightweight-charts.standalone.production.js" />
+	</ItemGroup>
 </Project>

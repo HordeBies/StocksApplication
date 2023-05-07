@@ -1,0 +1,257 @@
+﻿.trade-container {
+    font-size: 1.2em;
+}
+
+/* Form */
+#search-form-container form input[type='text'] {
+    width: 50%;
+    padding: 15px;
+    margin: 20px 0;
+    padding: 10px 30px;
+    border: none;
+    background: #f1f1f1;
+    text-align: center;
+}
+
+.selected-holding input {
+    text-transform: uppercase;
+}
+
+::-webkit-input-placeholder {
+    /* WebKit browsers */
+    text-transform: none;
+}
+
+:-moz-placeholder {
+    /* Mozilla Firefox 4 to 18 */
+    text-transform: none;
+}
+
+::-moz-placeholder {
+    /* Mozilla Firefox 19+ */
+    text-transform: none;
+}
+
+:-ms-input-placeholder {
+    /* Internet Explorer 10+ */
+    text-transform: none;
+}
+
+::placeholder {
+    /* Recent browsers */
+    text-transform: none;
+}
+
+/* User Information */
+.user-information {
+    border: blue 1px solid;
+}
+
+/* User Holdings */
+.holdings-container {
+    border: 2px red solid;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.holding-list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.holding-box {
+    border: 3px blue solid;
+}
+
+/* Selected Holding */
+.card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px;
+}
+
+.card-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .card-body > div {
+        padding: 10px;
+        width: 100%;
+    }
+
+        .card-body > div:nth-child(-n + 3) {
+            border-right: 2px solid rgba(0, 0, 0, 0.1);
+        }
+
+hr {
+    margin: 0 !important;
+}
+
+.recommendation-header::before {
+    clear: both;
+    content: '';
+    display: block;
+    width: 50px;
+    height: 3px;
+    margin: 20px auto;
+    background: #007bff;
+}
+
+/* Showcase Stocks */
+.stocks-list {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    flex-wrap: wrap;
+}
+
+.stock-box {
+    border: 3px solid red;
+    background-color: #333;
+    color: #fff;
+    width: 200px;
+    padding: 10px;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 200px;
+}
+
+.stocks-showcase {
+    height: 85vh;
+}
+
+.showcase-header {
+    text-align: center;
+}
+
+.stock-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.details-stock-btn {
+    background: rgb(182, 125, 125);
+}
+
+/* Modal Buy */
+.modal-buy {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+}
+
+.buy-content {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    height: 100%;
+}
+
+.buy-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 2rem;
+}
+
+.buy-btn,
+.close-btn {
+    background-color: #4caf50;
+    padding: 14px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+.buy-btn {
+    background: #007bff;
+}
+
+.close-btn {
+    background: #6c757d;
+}
+
+.buy-form input {
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+    border: 2px solid #000;
+    width: 25%;
+    font-size: 25px;
+}
+
+.alert {
+    animation: fadein 1s;
+    -moz-animation: fadein 1s; /* Firefox */
+    -webkit-animation: fadein 1s; /* Safari and Chrome */
+    -o-animation: fadein 1s; /* Opera */
+}
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Confirm */
+
+.confirm-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 30px;
+    height: 100vh;
+}
+
+.confirm-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.3rem;
+    align-items: center;
+}
+
+    .confirm-content > div {
+        text-align: center;
+    }
+
+    .confirm-content hr {
+        box-sizing: content-box;
+        height: 0;
+        overflow: visible;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        width: 500px;
+    }
+
+.confirm-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+}
+
+    .confirm-buttons button {
+        color: #fff;
+        padding: 8px 80px;
+    }
+
+.btn-confirm {
+    background: green;
+}
+
+.btn-cancel {
+    background: red;
+}

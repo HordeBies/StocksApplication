@@ -1,0 +1,57 @@
+﻿@using Stocks.Web.Areas.User.Models;
+@model List<Stock>
+<hr class="mt-5 mb-3" />
+<div class="text-center">
+    <h3>Popular Stocks</h3>
+</div>
+<section class="container-fluid active-stocks-container">
+    <div class="most-active-list d-flex">
+        @foreach (var stock in Model)
+        {
+            <a class="card-a mb-2 px-1 mt-3" asp-area="user" asp-controller="trade" asp-action="index" asp-route-id="@stock.StockSymbol">
+                <div class="active-container card">
+                    <div class="popularStockCard card" style="width: 18rem;">
+                        <div class="card-body active-header p-0">
+                            <div class="card-title border-0 m-0 pt-2 mt-2 active-title text-center">
+                                @stock.StockName
+                            </div>
+                        </div>
+                        <div class="card-text text-center mb-2">
+                            @stock.StockSymbol
+                        </div>
+                    </div>
+                </div>
+            </a>
+        }
+    </div>
+</section>
+
+<style>
+    .popularStockCard {
+        border-radius: 4px;
+        box-shadow: 0 6px 10px rgba(0,0,0,.08), 0 0 6px rgba(0,0,0,.05);
+        transition: .3s transform cubic-bezier(.155,1.105,.295,1.12),.3s box-shadow,.3s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
+        padding: 0;
+        cursor: pointer;
+    }
+
+        .popularStockCard:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
+        }
+
+    .active-stocks-container {
+        overflow-x: auto;
+        max-height: 100%;
+        /*cursor: grab; */
+        overflow-y: hidden;
+        white-space: nowrap;
+    }
+
+        .active-stocks-container a {
+            display: inline-block;
+        }
+</style>
+<script>
+    // TODO: Implement drag scroll
+</script>

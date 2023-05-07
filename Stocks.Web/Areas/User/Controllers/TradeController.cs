@@ -27,16 +27,19 @@ namespace Stocks.Web.Areas.User.Controllers
         public async Task<IActionResult> Index([FromServices] IFinnhubCompanyProfileService finnhubCompanyProfileService, [FromServices] IFinnhubStockPriceQuoteService finnhubStockPriceQuoteService, string? id) //Injected services via parameter because they are not used in other methods
         {
             if (string.IsNullOrEmpty(id))
-                id = "MSFT";
+                return View(new StockTrade());
 
             var quote = await finnhubStockPriceQuoteService.GetStockPriceQuote(id);
             var profile = await finnhubCompanyProfileService.GetCompanyProfile(id);
             var model = new StockTrade()
             {
-                Price = Convert.ToDouble(quote["c"].ToString()),
+                CurrentPrice = Convert.ToDouble(quote["c"].ToString()),
                 Quantity = tradingOptions.DefaultOrderQuantity ?? 0,
                 StockName = profile["name"].ToString(),
-                StockSymbol = id
+                StockSymbol = id,
+                PreviousClosedPrice = Convert.ToDouble(quote["pc"].ToString()),
+                ChangePercent = Convert.ToDouble(quote["dp"].ToString()),
+                DailyChange = Convert.ToDouble(quote["d"].ToString())
             };
             return View(model);
         }
