@@ -53,7 +53,6 @@
                 <span class="visually-hidden">Loading...</span>
             </div>
         </div>
-        @*<vc:popular-stocks></vc:popular-stocks>*@
     </div>
 </div>
 
@@ -65,13 +64,7 @@
     {
     <script>
         window.onload = function () {
-            $.ajax({
-                type: "GET",
-                url: '@Url.Action("Top25PopularStock", "Api")',
-                success: function (result) {
-                    document.getElementById("popular-stocks").innerHTML = result;
-                }
-            });
+            LoadPopularStocks('@Url.Action("Top25PopularStock", "Api")', "popular-stocks");
         };
     </script>
 }
