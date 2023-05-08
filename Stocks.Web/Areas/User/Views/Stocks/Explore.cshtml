@@ -24,6 +24,7 @@
 </div>
 
 @section Scripts{
+    <script src="~/js/explore.js"></script>
     <script>
         $(document).ready(function () {
             loadDataTable("@Url.Action("GetAllStocks", "Api")", "@(Url.Action("Index", "Trade"))/Index");
