@@ -2,8 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using Stocks.Core.Domain.Entities;
 using Stocks.Core.Domain.RepositoryContracts;
+using Stocks.Core.ServiceContracts;
 using Stocks.Core.ServiceContracts.FinnhubService;
 using Stocks.Core.ServiceContracts.StocksService;
+using Stocks.Core.Services;
 using Stocks.Core.Services.FinnhubService;
 using Stocks.Core.Services.StocksService;
 using Stocks.Infrastructure.DatabaseContext;
@@ -35,10 +37,14 @@ namespace Stocks.Web.StartupExtensions
             services.AddScoped<IFinnhubStockPriceQuoteService, FinnhubStockPriceQuoteService>();
             services.AddScoped<IFinnhubStocksService, FinnhubStocksService>();
             //Stocks Services
-            services.AddScoped<IStocksRepository, StocksRepository>();
+            services.AddScoped<IStockOrdersRepository, StockOrdersRepository>();
             services.AddScoped<IStocksBuyOrdersService, StocksBuyOrdersService>();
             services.AddScoped<IStocksSellOrdersService, StocksSellOrdersService>();
+            services.AddScoped<IUserStocksRepository, UserStocksRepository>();
             services.AddScoped<IUserStocksService, UserStocksService>();
+            //Identity Services
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserService, UserService>();
 
             services.AddDbContext<StockMarketDbContext>(options =>
             {

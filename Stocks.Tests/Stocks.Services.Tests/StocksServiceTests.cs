@@ -12,8 +12,8 @@ namespace Stocks.Tests.Services
         private readonly StocksBuyOrdersService stocksBuyOrdersService;
         private readonly StocksSellOrdersService stocksSellOrdersService;
 
-        private readonly Mock<IStocksRepository> mock;
-        private readonly IStocksRepository repository;
+        private readonly Mock<IStockOrdersRepository> mock;
+        private readonly IStockOrdersRepository repository;
 
         public StocksServiceTests()
         {

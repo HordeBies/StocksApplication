@@ -2,7 +2,9 @@
 @{
     Layout = null;
 }
-
+<div class="pb-2 ps-4">
+    <a asp-controller="Portfolio" asp-action="OrdersPDF" target=”_blank” asp-route-id="@Model.Symbol">Download as PDF</a>
+</div>
 <div class="row orders-list">
     <div class="col-6" id="buy-orders-list">
         <div class="box">

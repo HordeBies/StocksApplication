@@ -1,5 +1,5 @@
 using Serilog;
-using Stocks.Core.Domain.RepositoryContracts;
+using Stocks.Infrastructure.DatabaseInitializers;
 using Stocks.Web.Middlewares;
 using Stocks.Web.StartupExtensions;
 

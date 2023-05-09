@@ -33,6 +33,9 @@
     </div>
     <br />
     <div class="user-holdings-list container">
+        <div class="text-end">
+            <button onclick="orderDetails('')" class="btn btn-primary mx-2">See All Order History</button>
+        </div>
         @foreach (var stock in Model.Stocks)
         {
             <partial name="_OrderCardPartial" model="stock" />
@@ -56,7 +59,7 @@
     </script>
     <script>
         function orderDetails(symbol) {
-            LoadOrderDetails("modal","modal-body", symbol, "@Url.Action("OrderHistory","Trade")");
+            LoadOrderDetails("modal","modal-body", symbol, "@Url.Action("OrderHistory","Portfolio")");
         }
     </script>
 }

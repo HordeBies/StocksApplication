@@ -6,5 +6,6 @@ namespace Stocks.Web.Areas.User.Models
     {
         public IEnumerable<SellOrderResponse> SellOrders { get; set; }
         public IEnumerable<BuyOrderResponse> BuyOrders { get; set; }
+        public string? Symbol { get; set; }
     }
 }

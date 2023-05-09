@@ -2,7 +2,7 @@
 
 namespace Stocks.Core.Domain.RepositoryContracts
 {
-    public interface IStocksRepository
+    public interface IStockOrdersRepository
     {
         /// <summary>
         /// Creates a new buy order for a stock.
@@ -29,7 +29,5 @@ namespace Stocks.Core.Domain.RepositoryContracts
         /// </summary>
         /// <returns>A list of all sell orders for stocks.</returns>
         public Task<List<SellOrder>> GetSellOrders(string userId);
-        public Task<List<UserStock>> GetUserStocks(string userId);
-        public Task<UserStock?> GetUserStock(string userId, string stockSymbol);
     }
 }

@@ -19,7 +19,7 @@ namespace Stocks.Web.Controllers
         [HttpGet]
         [Route("finnhub/token")]
         [Authorize]
-        public IActionResult GetFinnhubToken() //TODO: use authentication to prevent 3rd party to acces this endpoint
+        public IActionResult GetFinnhubToken()
         {
             if (configuration["FinnhubToken"] == null)
             {

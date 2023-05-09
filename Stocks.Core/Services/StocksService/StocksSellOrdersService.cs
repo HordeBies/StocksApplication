@@ -7,8 +7,8 @@ namespace Stocks.Core.Services.StocksService
 {
     public class StocksSellOrdersService : IStocksSellOrdersService
     {
-        private readonly IStocksRepository stocksRepository;
-        public StocksSellOrdersService(IStocksRepository stocksRepository)
+        private readonly IStockOrdersRepository stocksRepository;
+        public StocksSellOrdersService(IStockOrdersRepository stocksRepository)
         {
             this.stocksRepository = stocksRepository;
         }

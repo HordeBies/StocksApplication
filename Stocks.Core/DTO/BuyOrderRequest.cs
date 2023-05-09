@@ -27,6 +27,17 @@ namespace Stocks.Core.DTO
                 Price = Price
             };
         }
+        public UserStock ToUserStock(string userId)
+        {
+            return new UserStock
+            {
+                ApplicationUserId = userId,
+                StockId = StockSymbol,
+                Amount = (int)Quantity,
+                Cost = Price * Quantity,
+                LastChange = DateTime.Now,
+            };
+        }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

@@ -98,135 +98,116 @@
     </div>
 </section>
 
-<script>
-    window.onload = function () {
-        LoadPopularStocks('@Url.Action("Top25PopularStock", "Api")', "popular-stocks")
-    };
-</script>
-<script>
-    var stocks;
-    $(document).ready(function () {
-        $.ajax({
-            type: "GET",
-            url: '@Url.Action("GetStocksNamesList", "Api")',
-            dataType: 'json',
-            success: function (result) {
-                stocks = result
-                autocomplete(document.getElementById("searchStockInput"), stocks);
-            },
-            error: function (error) {
-                console.log(error);
-            }
-        });
-        $("#searchStockInput").keyup(function (event) {
-            if (event.keyCode === 13) {
-                $("#searchStockButton").click();
-            }
-        });
-    });
-    function validateStockSearch() {
-        var stockSymbol = $("#searchStockInput").val();
-        if (stockSymbol == "") {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Please enter a stock symbol!',
-            })
-            return false;
-        }
-        if (!stocks.includes(stockSymbol)) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Please enter a valid stock symbol!',
-            })
-            return false;
-        }
-        var form = document.getElementById("searchStockForm");
-        form.action = "/User/Trade/Index/" + stockSymbol;
-        return true;
-    }
 
-</script>
-@if (Model.StockSymbol != null)
-{
-<script>
-        // Setup WebHook
-        fetch("/api/finnhub/token").then(response => response.text()).then(token => {
-            const socket = new WebSocket(`wss://ws.finnhub.io?token=${token}`);
-            socket.addEventListener('open', (event) => {
-                socket.send(JSON.stringify({ 'type': 'subscribe', 'symbol': '@Model.StockSymbol' }))
-            });
-
-            socket.addEventListener('message', (event) => {
-                if (event.data.type == "error") {
-                    $("#price").text(event.data.msg);
-                    return;
-                }
-                const data = JSON.parse(event.data);
-                if (data.type === 'trade') {
-                    console.log(data.data);
-                    const price = data.data[0].p;
-                    const timeStamp = data.data[0].t;
-
-                    $("#price").text(price.toFixed(2)); //mini display price
-                    $(".current-price").text("$" + price.toFixed(2)); //mini display price
-                }
-            });
-            window.addEventListener('beforeunload', (event) => {
-                socket.close();
-            });
-        });
-
-        function canSell() {
-            var quantity = $("#Quantity").val();
-            if (quantity == "") {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Please enter a quantity!',
-                })
-                return false;
-            }
-            if (quantity > @Model.SharesOwned) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'You do not own that many shares!',
-                })
-                return false;
-            }
-            return true;
-        }
-        function canBuy() {
-            var quantity = $("#Quantity").val();
-            if (quantity == "") {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Please enter a quantity!',
-                })
-                return false;
-            }
-            if (quantity * @Model.Price > @ViewBag.Balance) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'You do not have enough money!',
-                })
-                return false;
-            }
-            return true;
-        }
-</script>
-}
 
 @section Header{
     <link rel="stylesheet" href="~/css/trade.css" />
     <link rel="stylesheet" href="~/css/autocomplete.css" />
 }
 @section Scripts{
+    <script src="~/js/trade.js"></script>
     <script src="~/js/autocomplete.js"></script>
     <partial name="_ValidationScriptsPartial" />
 
+    <script>
+        window.onload = function () {
+            LoadPopularStocks('@Url.Action("Top25PopularStock", "Api")', "popular-stocks")
+        };
+    </script>
+    <script>
+        var stocks;
+        // Populate autocomplete
+        $(document).ready(function () {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("GetStocksNamesList", "Api")',
+                dataType: 'json',
+                success: function (result) {
+                    stocks = result
+                    autocomplete(document.getElementById("searchStockInput"), stocks);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+            $("#searchStockInput").keyup(function (event) {
+                if (event.keyCode === 13) {
+                    $("#searchStockButton").click();
+                }
+            });
+        });
+
+        // Validate stock search
+        function validateStockSearch() {
+            var stockSymbol = $("#searchStockInput").val();
+            if (stockSymbol == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please enter a stock symbol!',
+                })
+                return false;
+            }
+            if (!stocks.includes(stockSymbol)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please enter a valid stock symbol!',
+                })
+                return false;
+            }
+            var form = document.getElementById("searchStockForm");
+            form.action = "/User/Trade/Index/" + stockSymbol;
+            return true;
+        }
+
+    </script>
+
+    @if (Model.StockSymbol != null)
+    {
+        <script>
+            setupWebhook("@Model.StockSymbol");
+            // Custom validation with sweet alert for buying and selling stocks
+            function canSell() {
+                var quantity = $("#Quantity").val();
+                if (quantity == "") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Please enter a quantity!',
+                    })
+                    return false;
+                }
+                if (quantity > @Model.SharesOwned) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'You do not own that many shares!',
+                    })
+                    return false;
+                }
+                return true;
+            }
+            function canBuy() {
+                var quantity = $("#Quantity").val();
+                if (quantity == "") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Please enter a quantity!',
+                    })
+                    return false;
+                }
+                if (quantity * @Model.Price > @ViewBag.Balance) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'You do not have enough money!',
+                    })
+                    return false;
+                }
+                return true;
+            }
+        </script>
+    }
 }

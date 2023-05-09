@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Stocks.Core.Domain.RepositoryContracts
+namespace Stocks.Infrastructure.DatabaseInitializers
 {
     public interface IStockMarketDbInitializer
     {

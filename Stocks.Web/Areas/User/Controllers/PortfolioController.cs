@@ -63,5 +63,49 @@ namespace Stocks.Web.Areas.User.Controllers
 
             return View(model);
         }
+        [HttpGet]
+        public async Task<IActionResult> OrderHistory(string? id)
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            IEnumerable<BuyOrderResponse> buyOrders = await stocksBuyOrdersService.GetBuyOrders(userId);
+            IEnumerable<SellOrderResponse> sellOrders = await stocksSellOrdersService.GetSellOrders(userId);
+            if(!string.IsNullOrEmpty(id))
+            {
+                buyOrders = buyOrders.Where(r => r.StockSymbol == id);
+                sellOrders = sellOrders.Where(r => r.StockSymbol == id);
+            }
+            var model = new OrderHistoryVM()
+            {
+                BuyOrders = buyOrders.OrderByDescending(r => r.DateAndTimeOfOrder),
+                SellOrders = sellOrders.OrderByDescending(r => r.DateAndTimeOfOrder),
+                Symbol = id
+            };
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> OrdersPDF(string? id)
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            List<IOrderResponse> orders = new List<IOrderResponse>();
+            orders.AddRange(await stocksBuyOrdersService.GetBuyOrders(userId));
+            orders.AddRange(await stocksSellOrdersService.GetSellOrders(userId));
+            if(!string.IsNullOrEmpty(id))
+            {
+                orders = orders.Where(r => r.StockSymbol == id).ToList();
+            }
+
+            orders = orders.OrderByDescending(temp => temp.DateAndTimeOfOrder).ToList();
+
+            return new ViewAsPdf("OrdersPDF", orders, ViewData)
+            {
+                PageMargins = new Rotativa.AspNetCore.Options.Margins() { Top = 20, Right = 20, Bottom = 20, Left = 20 },
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape
+            };
+        }
     }
 }

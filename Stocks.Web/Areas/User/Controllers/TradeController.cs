@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Rotativa.AspNetCore;
 using Stocks.Core.Domain.Entities;
 using Stocks.Core.DTO;
+using Stocks.Core.ServiceContracts;
 using Stocks.Core.ServiceContracts.FinnhubService;
 using Stocks.Core.ServiceContracts.StocksService;
 using Stocks.Web.Areas.User.Models;
@@ -21,14 +21,19 @@ namespace Stocks.Web.Areas.User.Controllers
         private readonly TradingOptions tradingOptions;
         private readonly IStocksBuyOrdersService stocksBuyOrdersService;
         private readonly IStocksSellOrdersService stocksSellOrdersService;
+        private readonly IUserStocksService userStocksService;
+        private readonly IUserService userService;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public TradeController(UserManager<ApplicationUser> userManager,IOptions<TradingOptions> tradingOptions, IStocksBuyOrdersService stocksBuyOrdersService, IStocksSellOrdersService stocksSellOrdersService) //Injected services via constructor because they are used in multiple methods
+        public TradeController(UserManager<ApplicationUser> userManager,IOptions<TradingOptions> tradingOptions, IStocksBuyOrdersService stocksBuyOrdersService, IStocksSellOrdersService stocksSellOrdersService,
+            IUserStocksService userStocksService, IUserService userService) //Injected services via constructor because they are used in multiple methods
         {
             this.userManager = userManager;
             this.tradingOptions = tradingOptions.Value;
             this.stocksBuyOrdersService = stocksBuyOrdersService;
             this.stocksSellOrdersService = stocksSellOrdersService;
+            this.userStocksService = userStocksService;
+            this.userService = userService;
         }
         [HttpGet]
         public async Task<IActionResult> Index([FromServices] IFinnhubCompanyProfileService finnhubCompanyProfileService, [FromServices] IFinnhubStockPriceQuoteService finnhubStockPriceQuoteService, [FromServices] IUserStocksService userStocksService, string? id) //Injected services via parameter because they are not used in other methods
@@ -66,6 +71,8 @@ namespace Stocks.Web.Areas.User.Controllers
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
             var response = await stocksBuyOrdersService.CreateBuyOrder(orderRequest,userId);
+            await userStocksService.UpdateUserStock(orderRequest, userId);
+            await userService.UpdateBalance(orderRequest, userId);
 
             TempData["success"] = "Shares purchased successfully";
             return RedirectToAction(nameof(Index), new { id = orderRequest.StockSymbol });
@@ -78,41 +85,11 @@ namespace Stocks.Web.Areas.User.Controllers
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
             var response = await stocksSellOrdersService.CreateSellOrder(orderRequest, userId);
+            await userStocksService.UpdateUserStock(orderRequest, userId);
+            await userService.UpdateBalance(orderRequest, userId);
 
             TempData["success"] = "Shares sold successfully";
             return RedirectToAction(nameof(Index), new { id = orderRequest.StockSymbol });
-        }
-        [HttpGet]
-        public async Task<IActionResult> OrderHistory(string id)
-        {
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-            var model = new OrderHistoryVM()
-            {
-                BuyOrders = (await stocksBuyOrdersService.GetBuyOrders(userId)).Where(r => r.StockSymbol == id),
-                SellOrders = (await stocksSellOrdersService.GetSellOrders(userId)).Where(r => r.StockSymbol == id)
-            };
-            return View(model);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> OrdersPDF()
-        {
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-            List<IOrderResponse> orders = new List<IOrderResponse>();
-            orders.AddRange(await stocksBuyOrdersService.GetBuyOrders(userId));
-            orders.AddRange(await stocksSellOrdersService.GetSellOrders(userId));
-
-            orders = orders.OrderByDescending(temp => temp.DateAndTimeOfOrder).ToList();
-
-            return new ViewAsPdf("OrdersPDF", orders, ViewData)
-            {
-                PageMargins = new Rotativa.AspNetCore.Options.Margins() { Top = 20, Right = 20, Bottom = 20, Left = 20 },
-                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape
-            };
         }
     }
 }
