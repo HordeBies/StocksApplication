@@ -1,4 +1,4 @@
-# Bies Stock Market Application
+# [Bies Stock Market Application](https://stocksweb.azurewebsites.net/)
 This application is a stock market simulation built using ASP.NET Core 7 MVC. It allows users to view real-time stock prices and historical data, trade stocks, and track their earnings and portfolio.
 
 # Technologies Used
@@ -13,14 +13,23 @@ The application provides users with $10,000 fake dollars to invest in real-world
 - Trade: buy and sell stocks
 - Portfolio: track earnings, owned stocks, and stock order history
 - Instructions: learn how to use the application
-# Upcoming Features
-I am currently working on adding the following features to the application:
 
-- External logins using GitHub and Google
-- Email providers using MailKit & MimeKit
-- Deployment using Azure
+# Deployment
+BiesStocks is now deployed on Azure, including both the application and database. Users can access the platform at https://stocksweb.azurewebsites.net/
+
+**Disclaimer: Deployed project is unable to use WKHTMLTOPDF.exe inside Azure environment therefore functionalities related to Rotativa is only enabled in other than production environments**
+
+# Google and Github External Login Options
+BiesStocks now has the added functionality of Google and GitHub external login options, allowing users to register and sign in using their Google or GitHub accounts.
+
+# Contact
+Please feel free to contact me with any questions or feedback.
+
+# Contributing
+
+This project is open for contributions. If you would like to contribute to this project, please fork this repository and submit a pull request.
 # Getting Started
 To get started with the application, simply clone the repository and run it on your local machine.
 
 # Feedback
-We welcome feedback on the application and encourage you to submit any issues or feature requests through our GitHub repository.
+I welcome feedback on the application and encourage you to submit any issues or feature requests through the GitHub repository.
