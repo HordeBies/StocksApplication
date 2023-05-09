@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Stocks.Core.Domain.Entities;
+using System.ComponentModel;
 
 namespace Stocks.Web.Areas.Identity.Pages.Account
 {
@@ -85,6 +86,9 @@ namespace Stocks.Web.Areas.Identity.Pages.Account
             [Required]
             [EmailAddress]
             public string Email { get; set; }
+            [Required]
+            [DisplayName("Full Name")]
+            public string FullName { get; set; }
         }
         
         public IActionResult OnGet() => RedirectToPage("./Login");
@@ -156,6 +160,7 @@ namespace Stocks.Web.Areas.Identity.Pages.Account
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+                user.FullName = Input.FullName;
 
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)

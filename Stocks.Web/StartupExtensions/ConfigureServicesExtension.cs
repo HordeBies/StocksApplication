@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Stocks.Core.Domain.Entities;
 using Stocks.Core.Domain.RepositoryContracts;
@@ -45,6 +46,7 @@ namespace Stocks.Web.StartupExtensions
             //Identity Services
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IEmailSender, EmailSenderService>();
 
             services.AddDbContext<StockMarketDbContext>(options =>
             {
@@ -52,6 +54,18 @@ namespace Stocks.Web.StartupExtensions
             });
             
             services.AddIdentity<ApplicationUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<StockMarketDbContext>().AddDefaultTokenProviders().AddDefaultUI();
+
+            var gitHubOptions = configuration.GetSection("Authentication:GitHub").Get<ExternalAuthenticationSettings>();
+            var googleOptions = configuration.GetSection("Authentication:Google").Get<ExternalAuthenticationSettings>();
+            services.AddAuthentication().AddGoogle(options =>
+            {
+                options.ClientId = googleOptions.ClientId;
+                options.ClientSecret = googleOptions.ClientSecret;
+            }).AddGitHub(options =>
+            {
+                options.ClientId = gitHubOptions.ClientId;
+                options.ClientSecret = gitHubOptions.ClientSecret;
+            });
 
             services.ConfigureApplicationCookie(options =>
             {
