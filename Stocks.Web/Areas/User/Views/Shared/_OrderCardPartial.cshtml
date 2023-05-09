@@ -7,10 +7,13 @@
         <h3>
             @Model.StockName : @Model.StockSymbol
         </h3>
-        <div class="card-buttons">
-            <button onclick="orderDetails('@Model.StockSymbol')" class="btn btn-primary mx-4">Order History</button>
-            <a asp-controller="Trade" asp-action="Index" asp-route-id="@Model.StockSymbol" class="btn btn-primary">Trade</a>
-        </div>
+        @if (ViewBag.ShowButtons == null || ViewBag.ShowButtons == true)
+        {
+            <div class="card-buttons">
+                <button onclick="orderDetails('@Model.StockSymbol')" class="btn btn-primary mx-4">Order History</button>
+                <a asp-controller="Trade" asp-action="Index" asp-route-id="@Model.StockSymbol" class="btn btn-primary">Trade</a>
+            </div>
+        }
     </div>
     <h6 class="ms-2">Last Order: @Model.LastOrder.ToString("F")</h6>
     <hr />
@@ -32,7 +35,7 @@
         <div class="percent-change">
             <strong>Percent Change:</strong>
             <p class="@ViewBag.holdingStyleColor">
-                @(Model.PercentChange >= 0 ? "+" : "")@(Model.PercentChange)%
+                @(Model.PercentChange >= 0 ? "+" : "")@(Model.PercentChange.ToString("0.###"))%
             </p>
         </div>
     </div>

@@ -7,6 +7,7 @@ function setupWebhook(symbol) {
         });
 
         socket.addEventListener('message', (event) => {
+            return; //disabled for the time being
             if (event.data.type == "error") {
                 $("#price").text(event.data.msg);
                 return;
@@ -19,6 +20,7 @@ function setupWebhook(symbol) {
 
                 $("#price").text(price.toFixed(2)); //mini display price
                 $(".current-price").text("$" + price.toFixed(2)); //mini display price
+                // TODO: Handle percentage change and daily gain/loss
             }
         });
         window.addEventListener('beforeunload', (event) => {

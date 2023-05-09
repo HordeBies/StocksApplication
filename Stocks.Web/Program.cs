@@ -50,7 +50,7 @@ async Task SeedDatabase()
     {
         var dbInitializer = scope.ServiceProvider.GetRequiredService<IStockMarketDbInitializer>();
         // TODO: Before deploying enable this line
-        //await dbInitializer.Initialize();
+        await dbInitializer.Initialize();
     }
 }
 public partial class Program { }

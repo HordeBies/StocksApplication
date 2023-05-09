@@ -8,7 +8,7 @@ function LoadPopularStocks(url, containerId) {
     });
 }
 
-function drawChart(dataArray,containerId) {
+function drawChart(dataArray, containerId) {
     var data = google.visualization.arrayToDataTable(dataArray);
 
     var options = {
@@ -17,7 +17,16 @@ function drawChart(dataArray,containerId) {
         width: 600,
         height: 400,
         pieSliceText: 'percentage',
-        colors: ['#0598d8', '#f97263'],
+        colors: [
+            '#003f5c',
+            '#2f4b7c',
+            '#665191',
+            '#a05195',
+            '#d45087',
+            '#f95d6a',
+            '#ff7c43',
+            '#ffa600'
+        ],
         chartArea: {
             left: "3%",
             top: "3%",
@@ -29,7 +38,7 @@ function drawChart(dataArray,containerId) {
     chart.draw(data, options);
 }
 
-function LoadOrderDetails(parentClass,bodyClass,symbol,url) {
+function LoadOrderDetails(parentClass, bodyClass, symbol, url) {
     var body = document.getElementsByClassName(bodyClass)[0];
     body.innerHTML = `
                             <div class="spinner-border" role="status">

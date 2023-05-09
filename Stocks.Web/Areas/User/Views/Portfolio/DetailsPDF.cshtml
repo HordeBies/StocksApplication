@@ -1,0 +1,100 @@
+﻿@model PortfolioVM
+@{
+    Layout = null;
+    ViewBag.ShowButtons = false;
+}
+<link rel="stylesheet" href="@("https://"+Context.Request.Host.ToString()+"/css/portfolio.css")" />
+<link rel="stylesheet" href="@("https://"+Context.Request.Host.ToString()+"/css/modal.css")" />
+<link rel="stylesheet" href="@("https://"+Context.Request.Host.ToString()+"/lib/bootstrap/dist/css/bootstrap.min.css")" />
+<style>
+    .card-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 10px;
+    }
+
+    .card-body {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .card-body > div {
+            padding: 10px;
+            width: 100%;
+        }
+
+            .card-body > div:nth-child(-n + 3) {
+                border-right: 2px solid rgba(0, 0, 0, 0.1);
+            }
+
+    hr {
+        margin: 0 !important;
+    }
+
+</style>
+
+
+<div id="myModal" class="modal pt-5">
+    <div class="modal-content bg-secondary">
+        <div class="modal-header bg-secondary">
+            <span class="close">&times;</span>
+        </div>
+        <div class="modal-body ">
+        </div>
+        <div class="modal-footer bg-secondary">
+        </div>
+    </div>
+</div>
+<section class="container">
+    <div class="portfolio-container text-center mt-3">
+        <h2>Portfolio</h2>
+        <h6>
+            Each account starts with $10,000 fake dollars. Gamble responsibly.
+        </h6>
+        <hr />
+    </div>
+    <div class="portfolio-top-wrapper d-flex align-items-start">
+        <div class="mx-5 col-sm-12 card user-info mt-3 w-50 align-content-center text-center border-dark">
+            <div class="card-header h4 fw-bold">Account Information</div>
+            <ul class="list-group list-group-flush  h5">
+                <li class="list-group-item">User: @Model.FullName</li>
+                <li class="list-group-item">Account Balance: @Model.Balance.ToString("c")</li>
+                <li class="list-group-item">
+                    Total Holding Value: @Model.Stocks.Sum(s => s.TotalValue).ToString("c")
+                </li>
+            </ul>
+        </div>
+        <div id="piechart"></div>
+    </div>
+    <br />
+    <div class="user-holdings-list container">
+        @foreach (var stock in Model.Stocks)
+        {
+            <partial name="_OrderCardPartial" model="stock"  />
+        }
+    </div>
+</section>
+
+<script src="@("https://"+Context.Request.Host.ToString()+"/lib/bootstrap/dist/js/bootstrap.bundle.min.js")"></script>
+<script src="@("https://"+Context.Request.Host.ToString()+"/js/site.js")"></script>
+<script src="@("https://"+Context.Request.Host.ToString()+"/js/modal.js")"></script>
+<script src="@("https://"+Context.Request.Host.ToString()+"/lb/google-charts/loader.js")"></script>
+<script type="text/javascript">
+    // Load google charts
+    var myArray = [["StockSymbols", "StockShares"]];
+    @foreach (var stock in Model.Stocks.OrderByDescending(r => r.SharesOwned))
+    {
+        @:myArray.push(["@stock.StockSymbol", @stock.SharesOwned]);
+    }
+        google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.setOnLoadCallback(function () { drawChart(myArray, 'piechart') });
+
+</script>
+<script type="text/javascript">
+    function orderDetails(symbol) {
+        LoadOrderDetails("modal", "modal-body", symbol, "@Url.Action("OrderHistory","Portfolio")");
+    }
+</script>
+

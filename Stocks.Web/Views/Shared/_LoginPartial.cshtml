@@ -10,7 +10,7 @@
         var balance = ((await UserManager.GetUserAsync(User))?.Balance.ToString("c"));
 
     <li class="nav-item ">
-            <a class="nav-link py-1 h-100 text-white fw-bold" href="#" style="font-size:20px;">@balance</a>
+            <a class="nav-link py-1 h-100 text-white fw-bold" asp-area="User" asp-controller="Portfolio" asp-action="Index" style="font-size:20px;">@balance</a>
     </li>
     <li class="nav-item">
         <a id="manage" class="nav-link text-white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserAsync(User).GetAwaiter().GetResult()?.FullName</a>

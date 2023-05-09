@@ -34,6 +34,7 @@
     <br />
     <div class="user-holdings-list container">
         <div class="text-end">
+            <a asp-action="MailOrdersPDF" class="btn btn-primary mx-2">Email Order History</a>
             <button onclick="orderDetails('')" class="btn btn-primary mx-2">See All Order History</button>
         </div>
         @foreach (var stock in Model.Stocks)
@@ -49,7 +50,7 @@
     <script type="text/javascript">
         // Load google charts
         var myArray = [["StockSymbols", "StockShares"]];
-        @foreach (var stock in Model.Stocks)
+        @foreach (var stock in Model.Stocks.OrderByDescending(r =>r.SharesOwned))
         {
             @:myArray.push(["@stock.StockSymbol", @stock.SharesOwned]);
         }

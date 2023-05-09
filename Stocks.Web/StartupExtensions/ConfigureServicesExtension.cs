@@ -47,10 +47,12 @@ namespace Stocks.Web.StartupExtensions
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IEmailSender, EmailSenderService>();
+            services.AddScoped<IEmailAttachmentSender, EmailSenderService>();
 
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<StockMarketDbContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString("StockMarketConnection"));
+                options.UseSqlServer(connectionString);
             });
             
             services.AddIdentity<ApplicationUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<StockMarketDbContext>().AddDefaultTokenProviders().AddDefaultUI();
