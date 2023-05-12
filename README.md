@@ -11,10 +11,10 @@ This application is a stock market simulation built using ASP.NET Core 7 MVC. It
 # Functionality
 The application provides users with $10,000 fake dollars to invest in real-world stocks. Users can view stock prices and historical data, buy and sell stocks, and track their portfolio and order history. The main pages of the application are:
 
-- [Explore](./Demo/README.md#image-5-explore): view real-time stock prices and historical data
-- [Trade](./Demo/README.md#image-6-trade): buy and sell stocks
-- [Portfolio](./Demo/README.md#image-7-portfolio): track earnings, owned stocks, and stock order history
-- [Instructions](./Demo/README.md#image-4-beginners-guide): learn how to use the application
+- [Explore](https://raw.githubusercontent.com/HordeBies/StocksApplication/master/Demo/Explore.png): view real-time stock prices and historical data
+- [Trade](https://raw.githubusercontent.com/HordeBies/StocksApplication/master/Demo/Trade.png): buy and sell stocks
+- [Portfolio](https://raw.githubusercontent.com/HordeBies/StocksApplication/master/Demo/Portfolio.png): track earnings, owned stocks, and stock order history
+- [Instructions](https://raw.githubusercontent.com/HordeBies/StocksApplication/master/Demo/Beginners.png): learn how to use the application
 
 # Deployment
 BiesStocks is now deployed on Azure, including both the application and database. Users can access the platform at https://stocksweb.azurewebsites.net/
