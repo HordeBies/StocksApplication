@@ -1,6 +1,7 @@
 # Bies Stock Market Application
 This application is a stock market simulation built using ASP.NET Core 7 MVC. It allows users to view real-time stock prices and historical data, trade stocks, and track their earnings and portfolio.
 
+[Click Here for Demo And ScreenShots](./Demo)
 # Technologies Used
 - ASP.NET Core 7 MVC
 - Entity Framework Core with Microsoft SQL Server
@@ -9,10 +10,10 @@ This application is a stock market simulation built using ASP.NET Core 7 MVC. It
 # Functionality
 The application provides users with $10,000 fake dollars to invest in real-world stocks. Users can view stock prices and historical data, buy and sell stocks, and track their portfolio and order history. The main pages of the application are:
 
-- Explore: view real-time stock prices and historical data
-- Trade: buy and sell stocks
-- Portfolio: track earnings, owned stocks, and stock order history
-- Instructions: learn how to use the application
+- [Explore](./Demo/README.md#image-5-explore): view real-time stock prices and historical data
+- [Trade](./Demo/README.md#image-6-trade): buy and sell stocks
+- [Portfolio](./Demo/README.md#image-7-portfolio): track earnings, owned stocks, and stock order history
+- [Instructions](./Demo/README.md#image-4-beginners-guide): learn how to use the application
 # Upcoming Features
 I am currently working on adding the following features to the application:
 
