@@ -4,10 +4,7 @@ Welcome to the demo of my project! In this folder, you'll find a short video and
 
 ## Video
 
-<video width="752" height="423" controls>
-  <source src="./demo.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+https://github.com/HordeBies/StocksApplication/assets/73644073/24bfb0ee-2b22-4d26-8ccf-c4a04e48251e
 
 ## Images
 
