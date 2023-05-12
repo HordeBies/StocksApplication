@@ -4,6 +4,8 @@ Welcome to the demo of my project! In this folder, you'll find a short video and
 
 ## Video
 
+**Disclaimer: The demo is captured from application deployed on azure**
+
 https://github.com/HordeBies/StocksApplication/assets/73644073/24bfb0ee-2b22-4d26-8ccf-c4a04e48251e
 
 ## Images
